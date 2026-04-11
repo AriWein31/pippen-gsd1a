@@ -11,7 +11,7 @@
 |----------|------|------|-------|--------|--------------|---------------|
 | EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Project oversight, audits | — |
 | PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ COMPLETED | Week 1 & 2 done | Available for Week 4 |
-| **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | 🟢 **HIRED** | **Week 3: Mobile Shell** | **2026-04-26** |
+| **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | 🟢 **ACTIVE** | **Week 3: Mobile Shell (STARTED EARLY)** | **Daily** |
 | INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | Week 5 start |
 
 ---
