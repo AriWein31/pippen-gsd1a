@@ -1,0 +1,23 @@
+# Pippen Backend Dependencies
+
+# Database
+asyncpg>=0.29.0
+psycopg2-binary>=2.9.9
+
+# Web Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# Validation
+pydantic>=2.5.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+
+# Type checking
+mypy>=1.8.0
+
+# Utilities
+python-dateutil>=2.8.2

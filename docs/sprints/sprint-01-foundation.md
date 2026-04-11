@@ -18,23 +18,25 @@
 **Deliverable:** SQL migration files in `src/backend/db/migrations/`
 
 Create tables:
-- [ ] `patients` — Patient identity and metadata
-- [ ] `caregivers` — Emergency contacts and escalation chain
-- [ ] `care_team_members` — Clinical team
-- [ ] `events` — Unified event store (polymorphic JSONB)
-- [ ] `coverage_courses` — The core timing model
-- [ ] `patient_patterns` — Learned patterns
-- [ ] `patient_baselines` — Computed normals
-- [ ] `research_sources` — Tracked research feeds
-- [ ] `research_claims` — Extracted claims with embeddings
-- [ ] `tracked_trials` — Clinical trial monitoring
-- [ ] `recommendations` — Generated actions
-- [ ] `open_questions` — Active hypotheses
-- [ ] `daily_briefs` — Intelligence snapshots
-- [ ] `notification_log` — Alert history
-- [ ] `night_alarm_state` — Alarm state machine
+- [x] `patients` — Patient identity and metadata
+- [x] `caregivers` — Emergency contacts and escalation chain
+- [x] `care_team_members` — Clinical team
+- [x] `events` — Unified event store (polymorphic JSONB)
+- [x] `coverage_courses` — The core timing model
+- [x] `patient_patterns` — Learned patterns
+- [x] `patient_baselines` — Computed normals
+- [x] `research_sources` — Tracked research feeds
+- [x] `research_claims` — Extracted claims with embeddings
+- [x] `tracked_trials` — Clinical trial monitoring
+- [x] `recommendations` — Generated actions
+- [x] `open_questions` — Active hypotheses
+- [x] `daily_briefs` — Intelligence snapshots
+- [x] `notification_log` — Alert history
+- [x] `night_alarm_state` — Alarm state machine
 
 Reference: `/docs/architecture-v2.md` Section 4 (Core Data Models)
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 1.2: Event Store Implementation
 **Estimated:** 10 hours  
@@ -42,13 +44,15 @@ Reference: `/docs/architecture-v2.md` Section 4 (Core Data Models)
 **Deliverable:** `src/backend/events/store.py`
 
 Implement:
-- [ ] `append_event(patient_id, event_type, payload, source_type)` → returns event_id
-- [ ] `get_events(patient_id, since, event_types[])` → returns event stream
-- [ ] `get_timeline(patient_id, start, end)` → returns ordered events
-- [ ] Event validation (schema per event_type)
-- [ ] Immutable event guarantee (no updates, only amends)
+- [x] `append_event(patient_id, event_type, payload, source_type)` → returns event_id
+- [x] `get_events(patient_id, since, event_types[])` → returns event stream
+- [x] `get_timeline(patient_id, start, end)` → returns ordered events
+- [x] Event validation (schema per event_type)
+- [x] Immutable event guarantee (no updates, only amends)
 
 Key requirement: All events are append-only. No UPDATE or DELETE on events table.
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 1.3: Patient & Caregiver API
 **Estimated:** 4 hours  
@@ -56,12 +60,14 @@ Key requirement: All events are append-only. No UPDATE or DELETE on events table
 **Deliverable:** `src/backend/api/patients.py`
 
 Endpoints:
-- [ ] `POST /patients` — Create patient
-- [ ] `GET /patients/{id}` — Get patient
-- [ ] `PUT /patients/{id}` — Update patient
-- [ ] `POST /patients/{id}/caregivers` — Add caregiver
-- [ ] `GET /patients/{id}/caregivers` — List caregivers
-- [ ] `DELETE /caregivers/{id}` — Remove caregiver
+- [x] `POST /patients` — Create patient
+- [x] `GET /patients/{id}` — Get patient
+- [x] `PUT /patients/{id}` — Update patient
+- [x] `POST /patients/{id}/caregivers` — Add caregiver
+- [x] `GET /patients/{id}/caregivers` — List caregivers
+- [x] `DELETE /caregivers/{id}` — Remove caregiver
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 1.4: Integration Tests
 **Estimated:** 6 hours  
@@ -69,13 +75,15 @@ Endpoints:
 **Deliverable:** `tests/integration/test_events.py`
 
 Write tests for:
-- [ ] Event append and retrieval
-- [ ] Timeline reconstruction
-- [ ] Event immutability (no updates)
-- [ ] Concurrent event appends
-- [ ] Event payload validation
+- [x] Event append and retrieval
+- [x] Timeline reconstruction
+- [x] Event immutability (no updates)
+- [x] Concurrent event appends
+- [x] Event payload validation
 
 **Coverage target:** 100% on data layer
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 ### Definition of Done (Week 1)
 - [ ] All migrations run successfully on fresh database
