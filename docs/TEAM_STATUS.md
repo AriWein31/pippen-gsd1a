@@ -1,7 +1,7 @@
 # Pippen Team Status
 
-**Last Updated:** 2026-04-11 20:45 IST  
-**Reporting Period:** Day 0 — Week 2 Implementation (ahead of schedule)
+**Last Updated:** 2026-04-11 20:20 IST  
+**Reporting Period:** Week 2 Complete, Week 3 Starting
 
 ---
 
@@ -9,112 +9,76 @@
 
 | Agent ID | Name | Role | Model | Status | Current Task | Next Check-in |
 |----------|------|------|-------|--------|--------------|---------------|
-| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Reviewing Week 2 PRs | — |
-| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | 🟢 ACTIVE | Week 2 COMPLETE — Prep PR | 2026-04-12 09:30 |
-| MOBILE-001 | [3 Candidates] | Mobile Lead | MiniMax 2.7 | 🟡 TESTING | Technical test in progress | 2026-04-12 18:00 |
-| INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | — |
+| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Project oversight, audits | — |
+| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ COMPLETED | Week 1 & 2 done | Available for Week 4 |
+| **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | 🟢 **HIRED** | **Week 3: Mobile Shell** | **2026-04-26** |
+| INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | Week 5 start |
 
 ---
 
-## Daily Status Log
+## Recent Updates
 
-# 2026-04-11 (Day 0 Evening) — Week 2 Implementation
+### 2026-04-11 — Major Milestones
 
----
+**Ezra (Project Lead)**
+- ✅ Week 1 audited and merged
+- ✅ Week 2 audited, merged, bugs fixed
+- ✅ Mobile Lead recruited (Candidate 3)
+- 🔄 Next: Week 3 planning
 
-## 🐛 Git Activity (Last 24h)
+**Pituach (Backend)**
+- ✅ Week 1: Database + Event store
+- ✅ Week 2: Coverage course engine
+- ⏸️ On hold until Week 4 (Night Alarm)
 
-| Metric | Value |
-|--------|-------|
-| Commits | 6 |
-| Status | ok |
-
-**Recent Commits:**
-- `e530e593` Initial commit: Project structure, planning docs, watchdog setup
-- `fd7edc2` Week 1 Foundation: Database schema + Event Store + API
-- `a9c12f3` Week 2: Coverage Course Engine — State machine implemented
-- `b4d85e1` Week 2: Coverage Course Linking — Chain management implemented
-- `c7f92a2` Week 2: Entry APIs — Glucose, cornstarch, meals, symptoms endpoints
-- `d8e34b5` Week 2: E2E Tests — Coverage flow tests implemented
-
----
-
-## 📊 Sprint 01 Progress
-
-| Week | Task | Status |
-|------|------|--------|
-| Week 1 | 1.1 Database Schema | ✅ COMPLETE |
-| Week 1 | 1.2 Event Store | ✅ COMPLETE |
-| Week 1 | 1.3 Patient/Caregiver API | ✅ COMPLETE |
-| Week 1 | 1.4 Integration Tests | ✅ COMPLETE |
-| Week 2 | 2.1 Course State Machine | ✅ COMPLETE |
-| Week 2 | 2.2 Course Chain Linking | ✅ COMPLETE |
-| Week 2 | 2.3 Manual Entry APIs | ✅ COMPLETE |
-| Week 2 | 2.4 E2E Tests | ✅ COMPLETE |
-
-**Week 2 Status: 🟢 COMPLETE (ahead of schedule — 2 days early)**
+**Candidate 3 (Mobile Lead)**
+- ✅ Hired based on test task (100/100 score)
+- 🟡 Awaiting Week 3 start (April 26)
+- 📋 First task: Mobile shell with offline-first forms
 
 ---
 
-## ✅ Pituach — Week 2 Coverage Engine COMPLETE
+## Week Status
 
-**Completed Today:**
-- `src/backend/courses/engine.py` — CoverageCourseEngine with state machine
-  - `start_course()` with automatic previous course supersession
-  - `get_active_course()`, `get_course_chain()`, `calculate_gap()`
-  - `update_course_status()` with validated transitions
-  - Event publishing to event bus
-- `src/backend/courses/linking.py` — CoverageCourseLinking
-  - `link_courses()` for manual linking
-  - `detect_gap()` / `detect_overlap()` for coverage analysis
-  - `validate_chain()` for chain integrity
-- `src/backend/api/entries.py` — Entry endpoints
-  - `POST /patients/{id}/glucose` — logs event only
-  - `POST /patients/{id}/cornstarch` — creates 5.15h course
-  - `POST /patients/{id}/meals` — creates 2h course (if no cornstarch)
-  - `POST /patients/{id}/symptoms` — logs event only
-  - `GET /patients/{id}/active-course`
-  - `GET /patients/{id}/courses`
-- `tests/e2e/test_coverage_flow.py` — E2E tests
-  - Complete coverage flow test (9PM → 2AM → gap detection)
-  - State transition tests
-  - Chain linking tests
-
-**Deliverables:**
-- `src/backend/courses/engine.py` (CoverageCourseEngine)
-- `src/backend/courses/linking.py` (CoverageCourseLinking)
-- `src/backend/courses/__init__.py`
-- `src/backend/api/entries.py` (Entry endpoints)
-- `tests/e2e/test_coverage_flow.py` (E2E tests)
-
-**Duration Constants:**
-- `CORNSTARCH_DURATION_MINUTES = 309` (5.15 hours)
-- `MEAL_DURATION_MINUTES = 120` (2 hours)
-
-**State Machine:**
-```
-active → warning_sent → expired → alarmed → escalated
-   ↓           ↓           ↓
-superseded  closed     closed
-```
-
-**Next:** Create PR to `feature/week2-coverage-engine`, await Ezra review
+| Week | Dates | Status | Deliverable |
+|------|-------|--------|-------------|
+| Week 1 | Apr 12-18 | ✅ Complete | Data models & event store |
+| Week 2 | Apr 19-25 | ✅ Complete | Coverage course engine |
+| Week 3 | Apr 26-May 2 | 🟡 Ready to start | Mobile app shell |
+| Week 4 | May 3-9 | ⚪ Planned | Night alarm system |
 
 ---
 
-## ⚠️ Blockers & Issues
+## Mobile Lead Details
 
-- None
+**Name:** Candidate 3  
+**Repository:** https://github.com/AriWein31/pippen-glucose-app  
+**Test Score:** 100/100  
+**Strengths:**
+- Excellent architecture (hooks-based, clean separation)
+- PWA expertise (Workbox, offline-first)
+- Strong documentation
+- Production-ready thinking
+
+**Start Date:** April 26, 2026  
+**First Task:** Build 5-tab mobile shell with offline-first entry forms
 
 ---
 
-## 🎯 Action Items
+## Current Priorities
 
-- [ ] Ezra reviews `feature/week2-coverage-engine` PR
-- [ ] Ezra merges Week 1 and Week 2 PRs to main
-- [ ] Mobile Lead recruitment (Week 3 starts April 26)
-- [ ] Intelligence Engineer recruitment (Week 5 starts May 3)
+1. **Week 3 Preparation** — Mobile Lead onboarding docs
+2. **Week 4 Planning** — Night alarm system specs
+3. **Intelligence Engineer Recruitment** — Start Week 5
 
 ---
 
-*This report was auto-generated by Pituach (Backend Lead)*
+## Blockers & Escalations
+
+| Issue | Severity | Owner | Status |
+|-------|----------|-------|--------|
+| None currently | — | — | — |
+
+---
+
+*Next update: After Mobile Lead starts Week 3*
