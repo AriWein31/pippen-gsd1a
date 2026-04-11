@@ -10,7 +10,7 @@
 | Agent ID | Name | Role | Model | Status | Current Task | Next Check-in |
 |----------|------|------|-------|--------|--------------|---------------|
 | EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Reviewing Week 1 PRs | — |
-| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ COMPLETED | Week 1 data layer | 2026-04-12 09:30 |
+| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | 🟢 ACTIVE | Week 2: Coverage course engine | 2026-04-12 09:30 |
 | MOBILE-001 | [Unassigned] | Mobile Lead | MiniMax 2.7 | ⚪ Recruiting | — | — |
 | INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | — |
 
