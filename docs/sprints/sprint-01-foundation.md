@@ -113,10 +113,14 @@ superseded  closed     closed
 ```
 
 Methods:
-- [ ] `start_course(patient_id, trigger_event_id, trigger_type, expected_duration)`
-- [ ] `get_active_course(patient_id)` → returns current course or null
-- [ ] `get_course_chain(patient_id, start, end)` → returns linked courses
-- [ ] `calculate_gap(previous_course, new_course)` → returns gap in minutes
+- [x] `start_course(patient_id, trigger_event_id, trigger_type, expected_duration)`
+- [x] `get_active_course(patient_id)` → returns current course or null
+- [x] `get_course_chain(patient_id, start, end)` → returns linked courses
+- [x] `calculate_gap(previous_course, new_course)` → returns gap in minutes
+- [x] `update_course_status(course_id, new_status, reason)` — handles state transitions
+- [x] Event publishing to event bus (COVERAGE_COURSE_STARTED, WARNING, EXPIRED, CLOSED)
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 2.2: Course Chain Linking
 **Estimated:** 6 hours  
@@ -124,10 +128,13 @@ Methods:
 **Deliverable:** `src/backend/courses/linking.py`
 
 Implement:
-- [ ] Automatic linking of consecutive courses
-- [ ] Gap detection (coverage gaps between courses)
-- [ ] Overlap detection (double coverage)
-- [ ] Chain integrity validation
+- [x] Automatic linking of consecutive courses
+- [x] Gap detection (coverage gaps between courses)
+- [x] Overlap detection (double coverage)
+- [x] Chain integrity validation
+- [x] Chain summary statistics
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 2.3: Manual Entry APIs
 **Estimated:** 8 hours  
@@ -135,43 +142,52 @@ Implement:
 **Deliverable:** `src/backend/api/entries.py`
 
 Endpoints:
-- [ ] `POST /patients/{id}/glucose` — Log glucose reading
+- [x] `POST /patients/{id}/glucose` — Log glucose reading
   - Payload: `{value_mg_dl, reading_type, context, occurred_at}`
   - Returns: event_id
 
-- [ ] `POST /patients/{id}/cornstarch` — Log cornstarch dose
+- [x] `POST /patients/{id}/cornstarch` — Log cornstarch dose
   - Payload: `{grams, brand, is_bedtime_dose, occurred_at}`
   - Side effect: Creates coverage_course with 5.15h default duration
   - Returns: event_id, course_id
 
-- [ ] `POST /patients/{id}/meals` — Log meal
+- [x] `POST /patients/{id}/meals` — Log meal
   - Payload: `{meal_type, description, contains_cornstarch, occurred_at}`
   - Side effect: Creates coverage_course with 2h default duration (if not cornstarch)
   - Returns: event_id, course_id
 
-- [ ] `POST /patients/{id}/symptoms` — Log symptom
+- [x] `POST /patients/{id}/symptoms` — Log symptom
   - Payload: `{symptom_type, severity, context, occurred_at}`
   - Returns: event_id
+
+- [x] `GET /patients/{id}/active-course` — Get current active course
+- [x] `GET /patients/{id}/courses` — Get course chain
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 #### Task 2.4: End-to-End Test
 **Estimated:** 4 hours  
 **Priority:** 🟡 High  
 **Deliverable:** `tests/e2e/test_coverage_flow.py`
 
-Test scenario:
-1. Patient logs cornstarch at 9:00 PM
-2. System creates 5.15h course (expires ~2:09 AM)
-3. Verify course is active
-4. Patient logs next cornstarch at 2:00 AM
-5. Verify chain linking
-6. Verify gap detection (2:00 AM start vs 2:09 AM expected end = 9 min gap)
+Test scenarios covered:
+- [x] Patient logs cornstarch at 9:00 PM
+- [x] System creates 5.15h course (expires ~2:09 AM)
+- [x] Verify course is active
+- [x] Patient logs next cornstarch at 2:00 AM
+- [x] Verify chain linking (previous course linked)
+- [x] Verify gap detection (2:00 AM start vs 2:09 AM expected end)
+- [x] Verify no overlap scenario (2:18 AM start = 9 min gap)
+- [x] All state transitions tested
+
+**Status: ✅ COMPLETE** (2026-04-11)
 
 ### Definition of Done (Week 2)
-- [ ] Course tracking works for 5.15h cornstarch
-- [ ] Course tracking works for 2h meals
-- [ ] Chain linking handles overlapping courses
-- [ ] E2E test passes
-- [ ] API documentation in `docs/api/endpoints.md`
+- [x] Course tracking works for 5.15h cornstarch
+- [x] Course tracking works for 2h meals
+- [x] Chain linking handles overlapping courses
+- [x] E2E test passes
+- [ ] API documentation in `docs/api/endpoints.md` (deferred)
 
 ---
 
