@@ -153,31 +153,9 @@ class CoverageCourseEngine:
             
             previous_course_id = None
             if previous_course:
-                # Mark previous course as superseded
-                await conn.execute(
-                    """
-                    UPDATE coverage_courses
-                    SET status = 'superseded', updated_at = $2
-                    WHERE id = $1
-                    """,
-                    previous_course["id"],
-                    now,
-                )
                 previous_course_id = previous_course["id"]
-                
-                # Publish superseded event
-                bus = get_event_bus()
-                await bus.publish(
-                    EventTypes.COVERAGE_COURSE_CLOSED,
-                    {
-                        "course_id": str(previous_course["id"]),
-                        "patient_id": patient_id,
-                        "reason": "superseded",
-                        "superseded_by": str(previous_course_id),
-                    }
-                )
             
-            # Create new course
+            # Create new course FIRST (so we have the ID for the superseded event)
             course_id = str(uuid.uuid4())
             
             await conn.execute(
@@ -202,16 +180,22 @@ class CoverageCourseEngine:
                 now,
             )
             
-            # Update next_course_id on previous course
+            # Update next_course_id on previous course and mark as superseded
             if previous_course_id:
                 await conn.execute(
                     """
                     UPDATE coverage_courses
-                    SET next_course_id = $1
-                    WHERE id = $2
+                    SET next_course_id = $1, status = 'superseded', updated_at = $2
+                    WHERE id = $3
                     """,
                     course_id,
+                    now,
                     previous_course_id,
+                )
+                
+                # Calculate and record gap/overlap with previous course
+                await self._record_gap_or_overlap(
+                    conn, previous_course_id, course_id, started_at
                 )
         
         # Publish course started event
@@ -229,6 +213,20 @@ class CoverageCourseEngine:
                 "is_bedtime_dose": is_bedtime_dose,
             }
         )
+        
+        # Publish superseded event (AFTER course is created, with correct new course_id)
+        if previous_course_id:
+            await bus.publish(
+                EventTypes.COVERAGE_COURSE_CLOSED,
+                {
+                    "course_id": str(previous_course_id),
+                    "patient_id": patient_id,
+                    "reason": "superseded",
+                    "superseded_by": str(course_id),  # FIXED: Now points to new course
+                }
+            )
+        
+        return course_id
         
         return course_id
     
@@ -338,6 +336,87 @@ class CoverageCourseEngine:
         
         gap = new_start - prev_end
         return int(gap.total_seconds() / 60)
+    
+    async def _record_gap_or_overlap(
+        self,
+        conn,
+        previous_course_id: str,
+        new_course_id: str,
+        new_course_started_at: datetime,
+    ) -> None:
+        """
+        Record gap or overlap between consecutive courses.
+        
+        Called automatically when a new course supersedes a previous one.
+        Positive gap = coverage lapse.
+        Negative gap = double coverage (overlap).
+        
+        Args:
+            conn: Database connection (within transaction).
+            previous_course_id: ID of the course being superseded.
+            new_course_id: ID of the new course.
+            new_course_started_at: Start time of the new course.
+        """
+        # Get the previous course's expected end time
+        row = await conn.fetchrow(
+            """
+            SELECT expected_end_at, status
+            FROM coverage_courses
+            WHERE id = $1
+            """,
+            previous_course_id,
+        )
+        
+        if not row:
+            return
+        
+        prev_end = row["expected_end_at"]
+        
+        # Calculate gap (positive = gap, negative = overlap)
+        gap_minutes = int((new_course_started_at - prev_end).total_seconds() / 60)
+        
+        # Record the gap/overlap on the previous course
+        if gap_minutes > 0:
+            # Coverage gap
+            await conn.execute(
+                """
+                UPDATE coverage_courses
+                SET 
+                    next_course_id = $1,
+                    gap_to_next_minutes = $2,
+                    overlap_with_next_minutes = NULL
+                WHERE id = $3
+                """,
+                new_course_id,
+                gap_minutes,
+                previous_course_id,
+            )
+        elif gap_minutes < 0:
+            # Coverage overlap (negative gap)
+            await conn.execute(
+                """
+                UPDATE coverage_courses
+                SET 
+                    next_course_id = $1,
+                    gap_to_next_minutes = NULL,
+                    overlap_with_next_minutes = $2
+                WHERE id = $3
+                """,
+                new_course_id,
+                abs(gap_minutes),  # Store as positive number
+                previous_course_id,
+            )
+        else:
+            # Perfect handoff (no gap, no overlap)
+            await conn.execute(
+                """
+                UPDATE coverage_courses
+                SET next_course_id = $1
+                WHERE id = $2
+                """,
+                new_course_id,
+                previous_course_id,
+            )
     
     async def update_course_status(
         self,

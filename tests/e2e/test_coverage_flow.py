@@ -380,9 +380,11 @@ class TestCoverageCourseEngine:
             expected_duration=CORNSTARCH_DURATION_MINUTES,
         )
         
-        # Active should be course_2, not course_1
+        # Active should be course_2 (the new one), not course_1 (superseded)
         active = await course_engine.get_active_course(patient_id)
-        assert active["id"] == course_1_id  # Wait, this is the superseded one
+        assert active is not None  # There is an active course
+        assert active["id"] != course_1_id  # course_1 is superseded
+        assert active["status"] == "active"  # The active course has 'active' status
     
     @pytest.mark.asyncio
     async def test_update_status_valid_transition(self, course_engine, patient_id, event_id):
