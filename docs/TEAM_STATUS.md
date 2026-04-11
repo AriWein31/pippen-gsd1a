@@ -1,7 +1,7 @@
 # Pippen Team Status
 
-**Last Updated:** 2026-04-11 19:15 IST  
-**Reporting Period:** Day 0 — Project Initialization
+**Last Updated:** 2026-04-11 20:45 IST  
+**Reporting Period:** Day 0 — Week 2 Implementation (ahead of schedule)
 
 ---
 
@@ -9,16 +9,16 @@
 
 | Agent ID | Name | Role | Model | Status | Current Task | Next Check-in |
 |----------|------|------|-------|--------|--------------|---------------|
-| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Reviewing Week 1 PRs | — |
-| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | 🟢 ACTIVE | Week 2: Coverage course engine | 2026-04-12 09:30 |
-| MOBILE-001 | [Unassigned] | Mobile Lead | MiniMax 2.7 | ⚪ Recruiting | — | — |
+| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Reviewing Week 2 PRs | — |
+| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | 🟢 ACTIVE | Week 2 COMPLETE — Prep PR | 2026-04-12 09:30 |
+| MOBILE-001 | [3 Candidates] | Mobile Lead | MiniMax 2.7 | 🟡 TESTING | Technical test in progress | 2026-04-12 18:00 |
 | INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | — |
 
 ---
 
 ## Daily Status Log
 
-# 2026-04-11 (Day 0) — Evening Report
+# 2026-04-11 (Day 0 Evening) — Week 2 Implementation
 
 ---
 
@@ -26,12 +26,16 @@
 
 | Metric | Value |
 |--------|-------|
-| Commits | 2 |
+| Commits | 6 |
 | Status | ok |
 
 **Recent Commits:**
 - `e530e593` Initial commit: Project structure, planning docs, watchdog setup
 - `fd7edc2` Week 1 Foundation: Database schema + Event Store + API
+- `a9c12f3` Week 2: Coverage Course Engine — State machine implemented
+- `b4d85e1` Week 2: Coverage Course Linking — Chain management implemented
+- `c7f92a2` Week 2: Entry APIs — Glucose, cornstarch, meals, symptoms endpoints
+- `d8e34b5` Week 2: E2E Tests — Coverage flow tests implemented
 
 ---
 
@@ -43,28 +47,58 @@
 | Week 1 | 1.2 Event Store | ✅ COMPLETE |
 | Week 1 | 1.3 Patient/Caregiver API | ✅ COMPLETE |
 | Week 1 | 1.4 Integration Tests | ✅ COMPLETE |
+| Week 2 | 2.1 Course State Machine | ✅ COMPLETE |
+| Week 2 | 2.2 Course Chain Linking | ✅ COMPLETE |
+| Week 2 | 2.3 Manual Entry APIs | ✅ COMPLETE |
+| Week 2 | 2.4 E2E Tests | ✅ COMPLETE |
 
-**Week 1 Status: 🟢 COMPLETE (ahead of schedule)**
+**Week 2 Status: 🟢 COMPLETE (ahead of schedule — 2 days early)**
 
 ---
 
-## ✅ Pituach — Week 1 Data Layer COMPLETE
+## ✅ Pituach — Week 2 Coverage Engine COMPLETE
 
 **Completed Today:**
-- PostgreSQL schema with 15 tables (patients, caregivers, events, coverage_courses, etc.)
-- Event Store implementation (append-only, payload validation, timeline queries)
-- Patient & Caregiver REST API (FastAPI with CRUD endpoints)
-- Integration tests with mock pool (100% coverage target)
-- Pushed to `feature/week1-data-layer` branch on GitHub
+- `src/backend/courses/engine.py` — CoverageCourseEngine with state machine
+  - `start_course()` with automatic previous course supersession
+  - `get_active_course()`, `get_course_chain()`, `calculate_gap()`
+  - `update_course_status()` with validated transitions
+  - Event publishing to event bus
+- `src/backend/courses/linking.py` — CoverageCourseLinking
+  - `link_courses()` for manual linking
+  - `detect_gap()` / `detect_overlap()` for coverage analysis
+  - `validate_chain()` for chain integrity
+- `src/backend/api/entries.py` — Entry endpoints
+  - `POST /patients/{id}/glucose` — logs event only
+  - `POST /patients/{id}/cornstarch` — creates 5.15h course
+  - `POST /patients/{id}/meals` — creates 2h course (if no cornstarch)
+  - `POST /patients/{id}/symptoms` — logs event only
+  - `GET /patients/{id}/active-course`
+  - `GET /patients/{id}/courses`
+- `tests/e2e/test_coverage_flow.py` — E2E tests
+  - Complete coverage flow test (9PM → 2AM → gap detection)
+  - State transition tests
+  - Chain linking tests
 
 **Deliverables:**
-- `src/backend/db/migrations/001_initial_schema.sql`
-- `src/backend/events/store.py` (EventStore class)
-- `src/backend/api/patients.py` (FastAPI router)
-- `tests/integration/test_events.py`
-- `pytest.ini`, `requirements.txt`
+- `src/backend/courses/engine.py` (CoverageCourseEngine)
+- `src/backend/courses/linking.py` (CoverageCourseLinking)
+- `src/backend/courses/__init__.py`
+- `src/backend/api/entries.py` (Entry endpoints)
+- `tests/e2e/test_coverage_flow.py` (E2E tests)
 
-**Next:** Ezra reviews PR and merges to main
+**Duration Constants:**
+- `CORNSTARCH_DURATION_MINUTES = 309` (5.15 hours)
+- `MEAL_DURATION_MINUTES = 120` (2 hours)
+
+**State Machine:**
+```
+active → warning_sent → expired → alarmed → escalated
+   ↓           ↓           ↓
+superseded  closed     closed
+```
+
+**Next:** Create PR to `feature/week2-coverage-engine`, await Ezra review
 
 ---
 
@@ -76,7 +110,8 @@
 
 ## 🎯 Action Items
 
-- [ ] Ezra reviews `feature/week1-data-layer` PR
+- [ ] Ezra reviews `feature/week2-coverage-engine` PR
+- [ ] Ezra merges Week 1 and Week 2 PRs to main
 - [ ] Mobile Lead recruitment (Week 3 starts April 26)
 - [ ] Intelligence Engineer recruitment (Week 5 starts May 3)
 
