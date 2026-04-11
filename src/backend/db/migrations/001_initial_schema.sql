@@ -124,7 +124,8 @@ CREATE TABLE coverage_courses (
     gap_minutes INTEGER,  -- Gap from previous course
     overlap_minutes INTEGER,  -- Overlap with previous course
     
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE INDEX idx_courses_patient_id ON coverage_courses(patient_id);

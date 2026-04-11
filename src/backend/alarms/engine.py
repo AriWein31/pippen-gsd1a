@@ -16,6 +16,7 @@ Core rules:
 
 from __future__ import annotations
 
+import asyncio
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -343,7 +344,15 @@ class CoverageAlarmEngine:
         status: AlarmStatus,
         recipients: Sequence[dict],
         text: str,
-    ) -> None:
+    ) -> dict:
+        """Send notifications with failure handling and retry.
+        
+        Returns:
+            dict with 'sent', 'failed', 'failures' counts and details
+        """
+        results = {"sent": 0, "failed": 0, "failures": []}
+        now = self.clock.now()
+        
         async with self.pool.acquire() as conn:
             for recipient in recipients:
                 channel = NotificationChannel(recipient["channel"])
@@ -357,21 +366,82 @@ class CoverageAlarmEngine:
                     text=text,
                     metadata={"caregiver_id": recipient["caregiver_id"]},
                 )
-                await self.notification_service.send(message)
-                await conn.execute(
-                    """
-                    INSERT INTO notification_log (
-                        id, patient_id, notification_type, channel, recipient_id, recipient_address,
-                        message_text, message_payload, status, sent_at, created_at
-                    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'sent', $9, $9)
-                    """,
-                    str(uuid.uuid4()),
-                    patient_id,
-                    status.value,
-                    channel.value,
-                    recipient["caregiver_id"],
-                    recipient["recipient"],
-                    text,
-                    {"alarm_id": alarm_id, "course_id": course_id},
-                    self.clock.now(),
-                )
+                
+                # Try to send with retry logic
+                send_success = False
+                error_message = None
+                
+                for attempt in range(3):  # 3 retries
+                    try:
+                        await self.notification_service.send(message)
+                        send_success = True
+                        break
+                    except Exception as e:
+                        error_message = str(e)
+                        if attempt < 2:  # Don't sleep on last attempt
+                            await asyncio.sleep(0.5 * (attempt + 1))  # Exponential backoff
+                
+                # Log result
+                if send_success:
+                    await conn.execute(
+                        """
+                        INSERT INTO notification_log (
+                            id, patient_id, notification_type, channel, recipient_id, recipient_address,
+                            message_text, message_payload, status, sent_at, created_at
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'sent', $9, $9)
+                        """,
+                        str(uuid.uuid4()),
+                        patient_id,
+                        status.value,
+                        channel.value,
+                        recipient["caregiver_id"],
+                        recipient["recipient"],
+                        text,
+                        {"alarm_id": alarm_id, "course_id": course_id},
+                        now,
+                    )
+                    results["sent"] += 1
+                else:
+                    await conn.execute(
+                        """
+                        INSERT INTO notification_log (
+                            id, patient_id, notification_type, channel, recipient_id, recipient_address,
+                            message_text, message_payload, status, error_message, created_at
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'failed', $9, $10)
+                        """,
+                        str(uuid.uuid4()),
+                        patient_id,
+                        status.value,
+                        channel.value,
+                        recipient["caregiver_id"],
+                        recipient["recipient"],
+                        text,
+                        {"alarm_id": alarm_id, "course_id": course_id},
+                        error_message,
+                        now,
+                    )
+                    results["failed"] += 1
+                    results["failures"].append({
+                        "recipient": recipient["caregiver_id"],
+                        "channel": channel.value,
+                        "error": error_message,
+                    })
+                    logger.error(
+                        "Notification failed after 3 retries: patient=%s alarm=%s channel=%s error=%s",
+                        patient_id,
+                        alarm_id,
+                        channel.value,
+                        error_message,
+                    )
+        
+        # Log summary if there were failures
+        if results["failed"] > 0:
+            logger.error(
+                "Notification batch partial failure: sent=%d failed=%d patient=%s alarm=%s",
+                results["sent"],
+                results["failed"],
+                patient_id,
+                alarm_id,
+            )
+        
+        return results

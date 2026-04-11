@@ -9,6 +9,8 @@ from .engine import (
     NotificationService,
     NotificationMessage,
 )
+from .daemon import AlarmDaemon
+from .watchdog import AlarmDaemonWatchdog, DaemonHealth
 
 __all__ = [
     "AlarmStatus",
@@ -18,4 +20,7 @@ __all__ = [
     "SystemClock",
     "NotificationService",
     "NotificationMessage",
+    "AlarmDaemon",
+    "AlarmDaemonWatchdog",
+    "DaemonHealth",
 ]
