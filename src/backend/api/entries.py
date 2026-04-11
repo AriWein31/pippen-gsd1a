@@ -27,6 +27,7 @@ from ..courses.engine import (
     CORNSTARCH_DURATION_MINUTES,
     MEAL_DURATION_MINUTES,
 )
+from ..alarms.engine import CoverageAlarmEngine
 
 
 # ============================================================
@@ -143,6 +144,7 @@ def create_entries_router(
     pool: asyncpg.Pool,
     event_store: Optional[EventStore] = None,
     course_engine: Optional[CoverageCourseEngine] = None,
+    alarm_engine: Optional[CoverageAlarmEngine] = None,
 ):
     """
     Create FastAPI router with patient entry endpoints.
@@ -202,6 +204,9 @@ def create_entries_router(
             source_type="manual",
             occurred_at=reading.occurred_at,
         )
+
+        if alarm_engine is not None:
+            await alarm_engine.resolve_by_event(patient_id, "glucose_reading", event_id)
         
         return EventResponse(
             event_id=event_id,
@@ -263,6 +268,10 @@ def create_entries_router(
             occurred_at=dose.occurred_at,
         )
         
+        if alarm_engine is not None:
+            await alarm_engine.resolve_by_event(patient_id, "cornstarch_dose", event_id)
+            await alarm_engine.ensure_alarm_for_course(course_id)
+
         # Get course details
         course = await course_engine.get_course_by_id(course_id)
         
@@ -337,6 +346,10 @@ def create_entries_router(
                 occurred_at=meal.occurred_at,
             )
             
+            if alarm_engine is not None:
+                await alarm_engine.resolve_by_event(patient_id, "meal", event_id)
+                await alarm_engine.ensure_alarm_for_course(course_id)
+
             course = await course_engine.get_course_by_id(course_id)
             expected_end_at = course["expected_end_at"].isoformat()
             duration_minutes = MEAL_DURATION_MINUTES

@@ -27,6 +27,7 @@ export const CornstarchForm: React.FC<CornstarchFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (saving) return;
     setError(undefined);
 
     const numGrams = parseFloat(grams);
@@ -145,7 +146,7 @@ export const CornstarchForm: React.FC<CornstarchFormProps> = ({
               Cancel
             </Button>
           )}
-          <Button type="submit" variant="primary" fullWidth loading={saving}>
+          <Button type="submit" variant="primary" fullWidth loading={saving} disabled={saving}>
             Save Cornstarch
           </Button>
         </CardFooter>

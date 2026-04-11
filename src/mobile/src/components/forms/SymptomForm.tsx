@@ -31,13 +31,17 @@ export const SymptomForm: React.FC<SymptomFormProps> = ({ onSuccess, onCancel })
   const [notes, setNotes] = useState<string>('');
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | undefined>();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (saving) return;
+    setError(undefined);
 
     const numSeverity = parseInt(severity, 10);
     const validation = validateSeverity(numSeverity);
     if (!validation.valid) {
+      setError(validation.error);
       return;
     }
 
@@ -61,8 +65,8 @@ export const SymptomForm: React.FC<SymptomFormProps> = ({ onSuccess, onCancel })
       setTimeout(() => {
         onSuccess?.();
       }, 1500);
-    } catch {
-      // Silently fail - entry saved locally
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save symptom');
     } finally {
       setSaving(false);
     }
@@ -127,6 +131,8 @@ export const SymptomForm: React.FC<SymptomFormProps> = ({ onSuccess, onCancel })
             rows={3}
           />
 
+          {error && <p className="text-sm text-red-500">{error}</p>}
+
           <p className="text-sm text-[#8A8E97]">
             💾 Saved locally and synced when online
           </p>
@@ -138,7 +144,7 @@ export const SymptomForm: React.FC<SymptomFormProps> = ({ onSuccess, onCancel })
               Cancel
             </Button>
           )}
-          <Button type="submit" variant="primary" fullWidth loading={saving}>
+          <Button type="submit" variant="primary" fullWidth loading={saving} disabled={saving}>
             Save Symptom
           </Button>
         </CardFooter>

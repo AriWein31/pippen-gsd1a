@@ -27,9 +27,17 @@ export const MealForm: React.FC<MealFormProps> = ({ onSuccess, onCancel }) => {
   const [containsCornstarch, setContainsCornstarch] = useState(false);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | undefined>();
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (saving) return;
+    setError(undefined);
+
+    if (!description.trim()) {
+      setError('Please add a short meal description.');
+      return;
+    }
 
     setSaving(true);
 
@@ -52,6 +60,8 @@ export const MealForm: React.FC<MealFormProps> = ({ onSuccess, onCancel }) => {
         onSuccess?.();
       }, 1500);
     } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save meal');
+    } finally {
       setSaving(false);
     }
   };
@@ -91,12 +101,16 @@ export const MealForm: React.FC<MealFormProps> = ({ onSuccess, onCancel }) => {
           />
 
           <TextArea
-            label="Description (optional)"
+            label="Description"
             placeholder="What did you eat?"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
           />
+
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
 
           <div className="flex items-center justify-between p-4 bg-[#F6F7F9] rounded-xl">
             <div>
@@ -133,7 +147,7 @@ export const MealForm: React.FC<MealFormProps> = ({ onSuccess, onCancel }) => {
               Cancel
             </Button>
           )}
-          <Button type="submit" variant="primary" fullWidth loading={saving}>
+          <Button type="submit" variant="primary" fullWidth loading={saving} disabled={saving}>
             Save Meal
           </Button>
         </CardFooter>

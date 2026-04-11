@@ -37,6 +37,7 @@ export const GlucoseForm: React.FC<GlucoseFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
+    if (saving) return;
     setError(undefined);
 
     const numValue = parseFloat(value);
@@ -141,7 +142,7 @@ export const GlucoseForm: React.FC<GlucoseFormProps> = ({
               Cancel
             </Button>
           )}
-          <Button type="submit" variant="primary" fullWidth loading={saving}>
+          <Button type="submit" variant="primary" fullWidth loading={saving} disabled={saving}>
             Save Glucose
           </Button>
         </CardFooter>
