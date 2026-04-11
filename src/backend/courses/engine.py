@@ -383,8 +383,8 @@ class CoverageCourseEngine:
                 UPDATE coverage_courses
                 SET 
                     next_course_id = $1,
-                    gap_to_next_minutes = $2,
-                    overlap_with_next_minutes = NULL
+                    gap_minutes = $2,
+                    overlap_minutes = NULL
                 WHERE id = $3
                 """,
                 new_course_id,
@@ -398,8 +398,8 @@ class CoverageCourseEngine:
                 UPDATE coverage_courses
                 SET 
                     next_course_id = $1,
-                    gap_to_next_minutes = NULL,
-                    overlap_with_next_minutes = $2
+                    gap_minutes = NULL,
+                    overlap_minutes = $2
                 WHERE id = $3
                 """,
                 new_course_id,

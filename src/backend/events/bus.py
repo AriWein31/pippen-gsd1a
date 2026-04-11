@@ -125,3 +125,5 @@ class EventTypes:
     # System events
     EVENT_STORED = "event.stored"
     EVENT_AMENDED = "event.amended"
+    BASELINE_UPDATED = "baseline.updated"
+    PATTERN_DETECTED = "pattern.detected"

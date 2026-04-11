@@ -92,6 +92,14 @@ Immutable medical history:
 - Event bus for reactive components
 - Course linking to trigger events
 
+### 5. Baseline Intelligence (Week 5) 🧠
+The patient intelligence layer now includes a baseline computation engine under `src/backend/intelligence/`:
+- **Rolling 30-day window** for overnight metrics
+- **Minimum 7-day evidence threshold** before returning a baseline value
+- **Confidence scoring** based on qualifying day count
+- **Stored baselines** in `patient_baselines` with rationale and supporting event IDs
+- **Event bus publication** on `baseline.updated` for downstream intelligence consumers
+
 ---
 
 ## Architecture
