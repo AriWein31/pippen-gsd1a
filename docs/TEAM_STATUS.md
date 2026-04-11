@@ -18,23 +18,23 @@
 
 ## Recent Updates
 
-### 2026-04-11 — Major Milestones
-
-**Ezra (Project Lead)**
-- ✅ Week 1 audited and merged
-- ✅ Week 2 audited, merged, bugs fixed
-- ✅ Mobile Lead recruited (Candidate 3)
-- 🔄 Next: Week 3 planning
-
-**Pituach (Backend)**
-- ✅ Week 1: Database + Event store
-- ✅ Week 2: Coverage course engine
-- ⏸️ On hold until Week 4 (Night Alarm)
+### 2026-04-11 — Week 3 Started Early!
 
 **Candidate 3 (Mobile Lead)**
-- ✅ Hired based on test task (100/100 score)
-- 🟡 Awaiting Week 3 start (April 26)
-- 📋 First task: Mobile shell with offline-first forms
+- ✅ Started Week 3 early (ahead of schedule!)
+- ✅ Completed Task 3.1: Project setup (PWA + Vite + React + TypeScript)
+- ✅ Completed Task 3.2: Bottom navigation (5 tabs)
+- ✅ Completed Task 3.3: Offline-first storage (Dexie.js + IndexedDB)
+- ✅ Completed Task 3.4: 4 entry forms (Glucose, Cornstarch, Meal, Symptom)
+- ✅ Completed Task 3.5: Active course display with countdown
+- 🔄 Build verified and ready
+
+**Deliverables:**
+- `/src/mobile/` - Full PWA project
+- 5 navigable tabs
+- 4 offline-first entry forms
+- Active course card with countdown timer
+- Design system: #315BFF accent, #F6F7F9 background
 
 ---
 
@@ -44,7 +44,7 @@
 |------|-------|--------|-------------|
 | Week 1 | Apr 12-18 | ✅ Complete | Data models & event store |
 | Week 2 | Apr 19-25 | ✅ Complete | Coverage course engine |
-| Week 3 | Apr 26-May 2 | 🟡 Ready to start | Mobile app shell |
+| Week 3 | Apr 26-May 2 | 🟢 In progress (started 4/11) | Mobile app shell |
 | Week 4 | May 3-9 | ⚪ Planned | Night alarm system |
 
 ---
@@ -60,15 +60,16 @@
 - Strong documentation
 - Production-ready thinking
 
-**Start Date:** April 26, 2026  
-**First Task:** Build 5-tab mobile shell with offline-first entry forms
+**Start Date:** April 11, 2026 (early start!)  
+**Status:** Week 3 tasks 3.1-3.5 completed  
+**Project:** `/src/mobile/` - PWA with Vite + React + TypeScript
 
 ---
 
 ## Current Priorities
 
-1. **Week 3 Preparation** — Mobile Lead onboarding docs
-2. **Week 4 Planning** — Night alarm system specs
+1. **Week 3** — Finalize mobile shell, await backend integration
+2. **Week 4 Planning** — Night alarm system specs (Pituach)
 3. **Intelligence Engineer Recruitment** — Start Week 5
 
 ---

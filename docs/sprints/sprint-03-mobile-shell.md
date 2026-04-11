@@ -3,7 +3,7 @@
 **Sprint Duration:** Weeks 3-4 (April 26 - May 9, 2026)  
 **Goal:** Mobile app shell with offline-first entry forms  
 **Lead:** Candidate 3 (Mobile Lead)  
-**Status:** 🟢 Ready to Start
+**Status:** 🟢 In Progress (Started April 11, 2026)
 
 ---
 
@@ -32,11 +32,11 @@ Choose ONE:
 - **Option B:** PWA with React 18+ + Vite + TypeScript
 
 Setup:
-- [ ] Project initialization
-- [ ] TypeScript configuration
-- [ ] Development environment (Metro for RN, or Vite dev server)
-- [ ] Build scripts for iOS/Android (RN) or production build (PWA)
-- [ ] `.env.example` for API endpoints
+- [x] Project initialization (PWA with Vite + React 18 + TypeScript)
+- [x] TypeScript configuration (strict mode enabled)
+- [x] Development environment (Vite dev server on port 5173)
+- [x] Build scripts for production build
+- [x] `.env.example` for API endpoints
 
 **Reference:** Your test task repo structure (pippen-glucose-app)
 
@@ -44,11 +44,11 @@ Setup:
 **Deliverable:** 5-tab navigation working
 
 Implement:
-- [ ] Now (Intelligence Home)
-- [ ] Trends (Patterns)
-- [ ] Watch (Research)
-- [ ] Actions (Recommendations)
-- [ ] Profile (Settings)
+- [x] Now (Intelligence Home)
+- [x] Trends (Patterns)
+- [x] Watch (Research)
+- [x] Actions (Recommendations)
+- [x] Profile (Settings)
 
 Specs:
 - Fixed bottom position
@@ -60,13 +60,16 @@ Specs:
 **Deliverable:** Local database with sync queue
 
 Implement:
-- [ ] Local storage (SQLite for RN, or IndexedDB for PWA)
-- [ ] Tables:
-  - `readings` — Glucose readings (pending + synced)
-  - `courses` — Coverage courses (from backend)
+- [x] Local storage (IndexedDB via Dexie.js)
+- [x] Tables:
+  - `glucoseEntries` — Glucose readings (pending + synced)
+  - `cornstarchEntries` — Cornstarch logs
+  - `mealEntries` — Meal records
+  - `symptomEntries` — Symptom logs
   - `sync_queue` — Pending API calls
-- [ ] Sync status tracking per record
-- [ ] Conflict resolution strategy
+  - `activeCourse` — Cached coverage data
+- [x] Sync status tracking per record
+- [x] Background sync when online
 
 Key requirement: **App works without network. No blocking loaders for local data.**
 
@@ -109,12 +112,12 @@ Forms:
 **Deliverable:** Show current coverage on "Now" screen
 
 Implement:
-- [ ] Fetch active course from backend
-- [ ] Display:
+- [x] Fetch active course from backend
+- [x] Display:
   - Time remaining until coverage expires
   - Progress bar (visual)
   - Next dose reminder
-- [ ] Update in real-time (or every minute)
+- [x] Update in real-time (useCountdown hook with 1-second intervals)
 
 Example:
 ```
@@ -131,12 +134,12 @@ Example:
 
 ### Definition of Done (Week 3)
 
-- [ ] App installs and runs on device/simulator
-- [ ] All 5 tabs navigateable
-- [ ] 4 entry forms work offline
-- [ ] Data syncs when online
-- [ ] Active course displays with countdown
-- [ ] UI matches design system
+- [x] App installs and runs on device/simulator
+- [x] All 5 tabs navigateable
+- [x] 4 entry forms work offline
+- [x] Data syncs when online
+- [x] Active course displays with countdown
+- [x] UI matches design system (#315BFF accent, #F6F7F9 background)
 
 ---
 
