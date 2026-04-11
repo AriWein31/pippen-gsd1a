@@ -12,7 +12,7 @@
 | EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Project oversight, audits | — |
 | PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ COMPLETED | Week 1 & 2 done | Available for Week 4 |
 | **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | 🟢 **ACTIVE** | **Week 3: Mobile Shell (STARTED EARLY)** | **Daily** |
-| INTEL-001 | [Unassigned] | Intelligence Engineer | MiniMax 2.7 | ⚪ Recruiting | — | Week 5 start |
+| **INTEL-001** | **Candidate 1** | **Intelligence Engineer** | **GPT-5.4 Codex** | ✅ **HIRED** | **Starts Week 5** | **May 10, 2026** |
 
 ---
 
@@ -45,7 +45,7 @@
 | Week 1 | Apr 12-18 | ✅ Complete | Data models & event store |
 | Week 2 | Apr 19-25 | ✅ Complete | Coverage course engine |
 | Week 3 | Apr 26-May 2 | 🟢 In progress (started 4/11) | Mobile app shell |
-| Week 4 | May 3-9 | ⚪ Planned | Night alarm system |
+| Week 4 | May 3-9 | ✅ Complete | Night alarm system |
 
 ---
 
@@ -68,9 +68,9 @@
 
 ## Current Priorities
 
-1. **Week 3** — Finalize mobile shell, await backend integration
-2. **Week 4 Planning** — Night alarm system specs (Pituach)
-3. **Intelligence Engineer Recruitment** — Start Week 5
+1. **Week 4 wrap** — Night alarm system merged to main
+2. **Week 5 Planning** — Intelligence layer integration (Intel Eng starts May 10)
+3. **Phase 2 prep** — Pattern detection, baselines, daily briefs
 
 ---
 
@@ -82,4 +82,20 @@
 
 ---
 
-*Next update: After Mobile Lead starts Week 3*
+## Intelligence Engineer Details
+
+**Name:** Candidate 1  
+**Repository:** https://github.com/AriWein31/pippen-intelligence-candidate-1  
+**Test Score:** 104/100  
+**Strengths:**
+- Excellent test coverage (33 tests)
+- Clean architectural separation
+- Deterministic, explainable signals
+- Production-ready code structure
+
+**Start Date:** May 10, 2026 (Week 5)  
+**Phase 2 Owner:** Intelligence layer (Weeks 5-8)
+
+---
+
+*Next update: Week 4 completion report*

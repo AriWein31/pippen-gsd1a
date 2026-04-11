@@ -1,0 +1,92 @@
+[
+  {
+    "id": "evt-001",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-07T21:30:00Z",
+    "payload": {"grams": 42, "is_bedtime_dose": true}
+  },
+  {
+    "id": "evt-002",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-08T01:40:00Z",
+    "payload": {"value_mg_dl": 78, "context": "overnight"}
+  },
+  {
+    "id": "evt-003",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-08T02:18:00Z",
+    "payload": {"value_mg_dl": 67, "context": "overnight"}
+  },
+  {
+    "id": "evt-004",
+    "event_type": "symptom",
+    "occurred_at": "2026-04-08T02:20:00Z",
+    "payload": {"symptom_type": "hypoglycemia", "severity": 7}
+  },
+  {
+    "id": "evt-005",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-08T02:26:00Z",
+    "payload": {"grams": 40, "is_bedtime_dose": false}
+  },
+  {
+    "id": "evt-006",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-08T21:55:00Z",
+    "payload": {"grams": 42, "is_bedtime_dose": true}
+  },
+  {
+    "id": "evt-007",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-09T01:58:00Z",
+    "payload": {"value_mg_dl": 72, "context": "overnight"}
+  },
+  {
+    "id": "evt-008",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-09T02:34:00Z",
+    "payload": {"value_mg_dl": 64, "context": "overnight"}
+  },
+  {
+    "id": "evt-009",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-09T02:41:00Z",
+    "payload": {"grams": 41, "is_bedtime_dose": false}
+  },
+  {
+    "id": "evt-010",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-09T22:25:00Z",
+    "payload": {"grams": 43, "is_bedtime_dose": true}
+  },
+  {
+    "id": "evt-011",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-10T01:52:00Z",
+    "payload": {"value_mg_dl": 88, "context": "overnight"}
+  },
+  {
+    "id": "evt-012",
+    "event_type": "glucose_reading",
+    "occurred_at": "2026-04-10T02:37:00Z",
+    "payload": {"value_mg_dl": 66, "context": "overnight"}
+  },
+  {
+    "id": "evt-013",
+    "event_type": "symptom",
+    "occurred_at": "2026-04-10T02:40:00Z",
+    "payload": {"symptom_type": "fatigue", "severity": 5}
+  },
+  {
+    "id": "evt-014",
+    "event_type": "cornstarch_dose",
+    "occurred_at": "2026-04-10T02:47:00Z",
+    "payload": {"grams": 42, "is_bedtime_dose": false}
+  },
+  {
+    "id": "evt-015",
+    "event_type": "meal",
+    "occurred_at": "2026-04-10T07:35:00Z",
+    "payload": {"meal_type": "breakfast", "contains_cornstarch": false}
+  }
+]
