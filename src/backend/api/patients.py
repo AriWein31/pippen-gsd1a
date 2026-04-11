@@ -10,7 +10,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import FastAPI, HTTPException, status
+from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 from pydantic import ConfigDict
 
@@ -104,7 +104,7 @@ async def get_db_pool():
 def create_patients_router(pool):
     """Create FastAPI router with patient endpoints."""
     
-    router = FastAPI(prefix="/patients", tags=["patients"])
+    router = APIRouter(prefix="/patients", tags=["patients"])
     
     @router.post("", status_code=status.HTTP_201_CREATED, response_model=PatientResponse)
     async def create_patient(patient: PatientCreate) -> PatientResponse:

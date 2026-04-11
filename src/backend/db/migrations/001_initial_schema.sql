@@ -81,7 +81,8 @@ CREATE TABLE events (
     amended_by UUID REFERENCES events(id),
     amends UUID REFERENCES events(id),
     
-    CONSTRAINT events_immutable CHECK (amended_by IS NULL)  -- No updates allowed
+    -- Note: Immutability enforced by application layer (no UPDATE/DELETE on events table)
+    -- The amended_by and amends columns support the amendment workflow
 );
 
 CREATE INDEX idx_events_patient_id ON events(patient_id);

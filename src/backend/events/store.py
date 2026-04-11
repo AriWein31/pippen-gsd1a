@@ -17,6 +17,8 @@ from dataclasses import dataclass, field, asdict
 
 import asyncpg
 
+from .bus import get_event_bus, EventTypes
+
 
 # Event types
 EVENT_TYPES = {
@@ -230,6 +232,18 @@ class EventStore:
                 now,
                 amends,
             )
+        
+        # Publish to event bus for reactive components
+        bus = get_event_bus()
+        await bus.publish(
+            EventTypes.EVENT_STORED,
+            {
+                "event_id": event_id,
+                "patient_id": patient_id,
+                "event_type": event_type,
+                "source_type": source_type,
+            }
+        )
         
         return event_id
     
