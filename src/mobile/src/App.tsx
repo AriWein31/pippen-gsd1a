@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { BottomNav } from './components';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import {
   NowPage,
   TrendsPage,
@@ -26,18 +27,20 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-[#F6F7F9]">
-        <Routes>
-          <Route path="/" element={<NowPage />} />
-          <Route path="/trends" element={<TrendsPage />} />
-          <Route path="/watch" element={<WatchPage />} />
-          <Route path="/actions" element={<ActionsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
-        <BottomNav />
-      </div>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <div className="min-h-screen bg-[#F6F7F9]">
+          <Routes>
+            <Route path="/" element={<NowPage />} />
+            <Route path="/trends" element={<TrendsPage />} />
+            <Route path="/watch" element={<WatchPage />} />
+            <Route path="/actions" element={<ActionsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+          <BottomNav />
+        </div>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 };
 

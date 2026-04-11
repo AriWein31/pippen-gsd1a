@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader } from '../components/Card';
 import { Button } from '../components/Button';
 import { ProfileIcon, SyncIcon, MoonIcon, BellIcon } from '../components/Icons';
 import { SyncStatus } from '../components/SyncStatus';
-import { useOnlineStatus } from '../hooks';
+import { useOnlineStatus, useNotifications } from '../hooks';
 import { processSyncQueue } from '../api/sync';
 import { getPendingCount } from '../db/database';
 import { useState, useEffect } from 'react';
@@ -12,6 +12,7 @@ export const ProfilePage: React.FC = () => {
   const online = useOnlineStatus();
   const [pendingCount, setPendingCount] = useState(0);
   const [syncing, setSyncing] = useState(false);
+  const { permission, requesting, supported, requestPermission } = useNotifications();
 
   useEffect(() => {
     void getPendingCount().then(setPendingCount);
@@ -104,20 +105,28 @@ export const ProfilePage: React.FC = () => {
                 <span className="block w-5 h-5 bg-white rounded-full shadow translate-x-1" />
               </button>
             </div>
-            <div className="flex items-center justify-between py-2">
+            <div className="flex items-center justify-between py-2 gap-3">
               <div className="flex items-center gap-3">
                 <BellIcon size={20} color="#315BFF" />
-                <p className="font-medium text-[#1A1D21]">Notifications</p>
+                <div>
+                  <p className="font-medium text-[#1A1D21]">Notifications</p>
+                  <p className="text-sm text-[#8A8E97]">
+                    {supported ? `Permission: ${permission}` : 'Not supported in this browser'}
+                  </p>
+                </div>
               </div>
-              <button
-                className="w-12 h-7 rounded-full bg-[#E5E7EB] transition-colors duration-200"
-                disabled
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  void requestPermission();
+                }}
+                disabled={!supported || permission === 'granted' || requesting}
               >
-                <span className="block w-5 h-5 bg-white rounded-full shadow translate-x-1" />
-              </button>
+                {permission === 'granted' ? 'Enabled' : requesting ? 'Requesting...' : 'Enable'}
+              </Button>
             </div>
             <p className="text-sm text-[#8A8E97] pt-2">
-              🚧 More settings coming in Week 4
+              Week 4: notification permissions and alarm readiness are wired.
             </p>
           </CardContent>
         </Card>
@@ -135,7 +144,7 @@ export const ProfilePage: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-[#8A8E97]">Build</span>
-                <span className="text-[#1A1D21]">Week 3</span>
+                <span className="text-[#1A1D21]">Week 4</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#8A8E97]">Offline Support</span>
@@ -153,7 +162,7 @@ export const ProfilePage: React.FC = () => {
             <p className="text-xs text-[#8A8E97] text-center">
               Pippen Mobile App • Built with React + TypeScript
               <br />
-              Week 3: Mobile Shell
+              Week 4: Night Alarm Readiness
             </p>
           </CardContent>
         </Card>
