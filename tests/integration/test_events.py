@@ -20,8 +20,10 @@ from typing import Optional
 import pytest
 import pytest_asyncio
 
-# These would be real imports in production
-# For testing without a real DB, we mock at the pool level
+import sys
+sys.path.insert(0, "src")
+
+from backend.events.store import EventStore
 
 
 class MockPool:

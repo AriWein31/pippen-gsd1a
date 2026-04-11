@@ -22,16 +22,16 @@ import pytest
 
 # Import the modules under test
 import sys
-sys.path.insert(0, "src/backend")
+sys.path.insert(0, "src")
 
-from courses.engine import (
+from backend.courses.engine import (
     CoverageCourseEngine,
     CourseStatus,
     CORNSTARCH_DURATION_MINUTES,
     MEAL_DURATION_MINUTES,
     InvalidStateTransitionError,
 )
-from courses.linking import CoverageCourseLinking
+from backend.courses.linking import CoverageCourseLinking
 
 
 # ============================================================

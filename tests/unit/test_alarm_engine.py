@@ -4,10 +4,10 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-sys.path.insert(0, 'src/backend')
+sys.path.insert(0, 'src')
 
-from alarms.engine import CoverageAlarmEngine, AlarmStatus
-from alarms.notifiers import InMemoryNotificationService
+from backend.alarms.engine import CoverageAlarmEngine, AlarmStatus
+from backend.alarms.notifiers import InMemoryNotificationService
 
 
 class FrozenClock:
