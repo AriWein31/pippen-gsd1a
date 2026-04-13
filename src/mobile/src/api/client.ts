@@ -5,6 +5,10 @@ import type {
   SymptomEntry,
   ActiveCourse,
   ApiResponse,
+  BaselineMetric,
+  PatternSignal,
+  RiskScore,
+  DailyBrief,
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api';
@@ -90,6 +94,106 @@ export async function getActiveCourse(
 ): Promise<ApiResponse<ActiveCourse>> {
   return fetchApi<ActiveCourse>(`/patients/${patientId}/active-course`);
 }
+
+// ---- Intelligence Endpoints (Week 6) ----
+
+// Get risk score
+export async function getRiskScore(
+  patientId: string
+): Promise<ApiResponse<RiskScore>> {
+  return fetchApi<RiskScore>(`/patients/${patientId}/risk`);
+}
+
+// Get baselines
+export async function getBaselines(
+  patientId: string
+): Promise<ApiResponse<BaselineMetric[]>> {
+  return fetchApi<BaselineMetric[]>(`/patients/${patientId}/baselines`);
+}
+
+// Get patterns
+export async function getPatterns(
+  patientId: string
+): Promise<ApiResponse<PatternSignal[]>> {
+  return fetchApi<PatternSignal[]>(`/patients/${patientId}/patterns`);
+}
+
+// Get daily brief
+export async function getDailyBrief(
+  patientId: string
+): Promise<ApiResponse<DailyBrief>> {
+  return fetchApi<DailyBrief>(`/patients/${patientId}/daily-brief`);
+}
+
+// Fetch all intelligence data in parallel
+export async function fetchIntelligence(
+  patientId: string
+): Promise<{
+  risk: RiskScore | null;
+  baselines: BaselineMetric[];
+  patterns: PatternSignal[];
+  brief: DailyBrief | null;
+  isPartial: boolean;  // true when ≥1 endpoint failed
+}> {
+  const results = await Promise.allSettled([
+    getRiskScore(patientId),
+    getBaselines(patientId),
+    getPatterns(patientId),
+    getDailyBrief(patientId),
+  ]);
+
+  const [riskResult, baselinesResult, patternsResult, briefResult] = results;
+
+  let risk: RiskScore | null = null;
+  let riskFailed = false;
+  if (riskResult.status === 'fulfilled') {
+    const r = riskResult.value as ApiResponse<RiskScore>;
+    if (r.success && r.data) risk = r.data;
+    else riskFailed = true;
+  } else {
+    riskFailed = true;
+  }
+
+  let baselines: BaselineMetric[] = [];
+  let baselinesFailed = false;
+  if (baselinesResult.status === 'fulfilled') {
+    const b = baselinesResult.value as ApiResponse<BaselineMetric[]>;
+    if (b.success && b.data) baselines = b.data;
+    else baselinesFailed = true;
+  } else {
+    baselinesFailed = true;
+  }
+
+  let patterns: PatternSignal[] = [];
+  let patternsFailed = false;
+  if (patternsResult.status === 'fulfilled') {
+    const p = patternsResult.value as ApiResponse<PatternSignal[]>;
+    if (p.success && p.data) patterns = p.data;
+    else patternsFailed = true;
+  } else {
+    patternsFailed = true;
+  }
+
+  let brief: DailyBrief | null = null;
+  let briefFailed = false;
+  if (briefResult.status === 'fulfilled') {
+    const br = briefResult.value as ApiResponse<DailyBrief>;
+    if (br.success && br.data) brief = br.data;
+    else briefFailed = true;
+  } else {
+    briefFailed = true;
+  }
+
+  return {
+    risk,
+    baselines,
+    patterns,
+    brief,
+    isPartial: riskFailed || baselinesFailed || patternsFailed || briefFailed,
+  };
+}
+
+// ---- Connectivity ----
 
 // Check if online
 export function isOnline(): boolean {

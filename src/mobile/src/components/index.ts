@@ -5,4 +5,5 @@ export * from './Card';
 export * from './BottomNav';
 export * from './ActiveCourseCard';
 export * from './SyncStatus';
+export * from './IntelligenceCard';
 export * from './forms';

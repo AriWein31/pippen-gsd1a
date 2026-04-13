@@ -12,7 +12,7 @@
 | EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Project oversight, audits | — |
 | PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ Available | Week 1-4 complete | Week 5 support |
 | **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | ✅ **COMPLETE** | **Week 3-4 done** | **Available** |
-| **INTEL-001** | **Candidate 1** | **Intelligence Engineer** | **GPT-5.4 Codex** | 🟢 **ACTIVE** | **Week 5: Intelligence Layer** | **Daily** |
+| **INTEL-001** | **Candidate 1** | **Intelligence Engineer** | **MiniMax 2.7** | 🟢 **ACTIVE** | **Week 5: Intelligence Layer** | **Daily** |
 
 ---
 
@@ -57,7 +57,7 @@
 
 **Sprint:** `docs/sprints/sprint-05-intelligence-layer.md`  
 **Owner:** Candidate 1 (Intelligence Engineer)  
-**Model:** GPT-5.4 Codex  
+**Model:** MiniMax 2.7
 **Started:** 2026-04-11 (early start)
 
 ### Tasks
