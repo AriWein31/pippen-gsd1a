@@ -1,7 +1,7 @@
 # Pippen Team Status
 
-**Last Updated:** 2026-04-13 12:10 IST
-**Reporting Period:** Week 5 Active — Intelligence Layer
+**Last Updated:** 2026-04-13 15:25 IST
+**Reporting Period:** Weeks 1-6 wrapped, Week 7 paused pending later restart
 
 ---
 
@@ -18,17 +18,25 @@
 
 ## Recent Updates
 
-### 2026-04-13 — Week 5 Completed in Local Working Tree
+### 2026-04-13 — Weeks 5-6 Wrapped and Shipped
 
 **Candidate 1 (Intelligence Engineer)**
-- ✅ Task 5.1: Baseline Computation Engine complete
-- ✅ Task 5.2: Pattern Detection Engine complete
-- ✅ Task 5.3: Daily Brief Generator complete
-- ✅ Task 5.4: Risk Scoring implemented
-- ✅ Task 5.5: API Integration wired for baselines, patterns, daily brief, risk, and admin brief regeneration
-- Reporting continues through AriAgent, but ownership remains with Candidate 1 (`INTEL-WEEK5-CANDIDATE1`)
-- Verification: focused Week 5 unit suite passes locally (`8 passed`)
-- Caveat: repo-wide pytest still blocked by unrelated `candidate-2` import issue; FastAPI API-smoke tests not runnable in this env because FastAPI package is missing
+- ✅ Week 5 complete: baselines, patterns, daily briefs, risk scoring, and intelligence APIs
+- ✅ Model assignment updated to MiniMax 2.7 for implementation, with Ezra/Codex audit split
+- ✅ Focused backend/API test coverage passing
+
+**Candidate 3 (Mobile Lead)**
+- ✅ Week 6 complete: Now screen intelligence integration
+- ✅ Added loading, insufficient-data, partial-data, and not-configured states
+- ✅ Mobile reads baselines, patterns, risk, and daily brief
+
+**Repository / shipping status**
+- ✅ Week 5 shipped to GitHub
+- ✅ Week 6 shipped to GitHub
+- ✅ FastAPI and httpx installed locally to unblock API tests
+- ✅ Unit suite passing locally (`pytest tests/unit/` → 12 passed)
+- ⚠️ Full repo pytest still has unrelated legacy harness issues outside the wrapped Week 5-6 scope
+- ⏸️ Week 7 was explored but not wrapped; resume later from a clean restart
 
 **Sprint Spec:** `docs/sprints/sprint-05-intelligence-layer.md`
 
@@ -49,7 +57,9 @@
 | Week 2 | Apr 19-25 | ✅ Complete | Coverage course engine |
 | Week 3 | Apr 26-May 2 | ✅ Complete | Mobile app shell |
 | Week 4 | May 3-9 | ✅ Complete | Night alarm system |
-| **Week 5** | **May 10-16** | ✅ **Implemented locally** | **Baseline, patterns, briefs, risk, and API endpoints complete** |
+| **Week 5** | **May 10-16** | ✅ **Shipped** | **Baseline, patterns, briefs, risk, and API endpoints complete** |
+| **Week 6** | **May 17-23** | ✅ **Shipped** | **Now screen intelligence integration complete** |
+| **Week 7** | **May 24-30** | ⏸️ **Paused** | **Started briefly, not wrapped, resume later** |
 
 ---
 
@@ -115,10 +125,10 @@
 
 ## Current Priorities
 
-1. **Audit Pass** — Run Ezra/GPT-5.4 Codex review before merge
-2. **API Smoke Test** — Validate endpoints in an env with FastAPI installed
-3. **Resolve Repo Test Noise** — Fix unrelated `candidate-2` import failure so full pytest is usable
-4. **Commit + Merge Prep** — Review diff and ship cleanly
+1. **Pause Week 7 cleanly** — do not mix unfinished alerting work into the Week 5-6 wrap-up
+2. **Resume Week 7 later today** — restart from clean scope and file state
+3. **Resolve remaining repo test noise** — legacy e2e/integration harness still needs cleanup outside Week 5-6
+4. **Keep docs aligned** — use Team Status + README as source of truth for shipped scope
 
 ---
 
@@ -130,4 +140,4 @@
 
 ---
 
-*Next update: Daily standup reports from Intelligence Engineer*
+*Next update: Week 7 restart plan and fresh scope*

@@ -24,12 +24,13 @@ Pippen transforms this from burden to intelligence: calm, predictive, and medica
 
 ---
 
-## Current Status: Phase 1 Complete ✅
+## Current Status: Weeks 1-6 Complete ✅
 
 | Phase | Weeks | Status | Deliverable |
 |-------|-------|--------|-------------|
 | **Phase 1: Foundation** | 1-4 | ✅ **COMPLETE** | Mobile app + night alarms |
-| Phase 2: Intelligence | 5-8 | 🟡 Planned | Pattern detection + insights |
+| **Phase 2: Intelligence (Weeks 5-6 delivered)** | 5-6 | ✅ **COMPLETE** | Baselines, patterns, risk, daily briefs, mobile intelligence UI |
+| Phase 2 continuation | 7-8 | 🟡 Not wrapped yet | Smart notifications + further delivery |
 | Phase 3: Research & Chat | 9-12 | ⚪ Not Started | Research monitoring + Ask Pippen |
 | Phase 4: Production | 13-16 | ⚪ Not Started | Security + launch readiness |
 
@@ -39,8 +40,11 @@ Pippen transforms this from burden to intelligence: calm, predictive, and medica
 |------|--------|-------------|-------|
 | Week 1 | ✅ Complete | Database schema, event store, patient APIs | Pituach |
 | Week 2 | ✅ Complete | Coverage course engine (5.15h/2h timing) | Pituach |
-| Week 3 | ✅ Complete | Mobile shell (PWA, offline-first, 5 tabs) | Mobile Lead |
+| Week 3 | ✅ Complete | Mobile shell (PWA, offline-first, 5 tabs) | Candidate 3 |
 | Week 4 | ✅ Complete | **Night alarm system** (safety-critical) | Pituach + Ezra |
+| Week 5 | ✅ Complete | Baselines, patterns, daily briefs, risk scoring, intelligence APIs | Candidate 1 + Ezra audit |
+| Week 6 | ✅ Complete | Now screen intelligence integration, config/degraded states, mobile polish | Candidate 3 + Ezra audit |
+| Week 7 | 🟡 Started only | Alerting/notification work in progress, not wrapped | Candidate 1 + Candidate 3 |
 
 ---
 
@@ -92,13 +96,15 @@ Immutable medical history:
 - Event bus for reactive components
 - Course linking to trigger events
 
-### 5. Baseline Intelligence (Week 5) 🧠
-The patient intelligence layer now includes a baseline computation engine under `src/backend/intelligence/`:
-- **Rolling 30-day window** for overnight metrics
-- **Minimum 7-day evidence threshold** before returning a baseline value
-- **Confidence scoring** based on qualifying day count
-- **Stored baselines** in `patient_baselines` with rationale and supporting event IDs
-- **Event bus publication** on `baseline.updated` for downstream intelligence consumers
+### 5. Intelligence Layer (Weeks 5-6) 🧠
+The patient intelligence layer now includes production code under `src/backend/intelligence/` and mobile consumption on the Now screen:
+- **Rolling 30-day baselines** for overnight metrics
+- **Deterministic pattern detection** for late bedtime dosing, overnight low clusters, and recent instability
+- **Weighted risk scoring** with explainable factors and confidence
+- **Daily brief generation** for what changed, what matters, and recommended attention
+- **Patient APIs** for baselines, patterns, risk, and daily brief
+- **Mobile Now screen intelligence panel** with loading, insufficient-data, partial-data, and not-configured states
+- **Focused unit coverage** for intelligence engines and API surfaces
 
 ---
 
@@ -198,7 +204,7 @@ npm run preview
 | **Project Lead / Architect** | **Ezra** | **GPT-5.4 Codex** | 🟢 Active |
 | Backend Lead | Pituach | MiniMax 2.7 | ✅ Available |
 | Mobile Lead | Candidate 3 | MiniMax 2.7 | 🟢 Week 3-4 complete |
-| **Intelligence Engineer** | **Candidate 1** | **GPT-5.4 Codex** | ✅ **Hired, starts Week 5** |
+| **Intelligence Engineer** | **Candidate 1** | **MiniMax 2.7** | ✅ **Week 5-6 delivered** |
 | QA / Safety Auditor | Ezra | GPT-5.4 Codex | 🟢 Active |
 
 ---
@@ -220,6 +226,7 @@ npm run preview
 - [Sprint 1: Foundation](./docs/sprints/sprint-01-foundation.md)
 - [Sprint 3: Mobile Shell](./docs/sprints/sprint-03-mobile-shell.md)
 - [Sprint 4: Night Alarm](./docs/sprints/sprint-04-night-alarm.md)
+- [Sprint 5: Intelligence Layer](./docs/sprints/sprint-05-intelligence-layer.md)
 
 ### Team
 - [👥 Team Status](./docs/TEAM_STATUS.md) — Daily reports and assignments

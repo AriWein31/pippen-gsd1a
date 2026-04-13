@@ -124,14 +124,21 @@
 ---
 
 ### Milestone 7: Smart Notifications (End of Week 7)
-**Owner:** Pituach + Mobile Lead  
-**Status:** ⚪ Not Started
+**Owner:** Candidate 1 + Candidate 3
+**Status:** ⏸️ Paused — Week 7 work started briefly but not wrapped (2026-04-13)
 
 #### Deliverables
-- [ ] Notification router
-- [ ] Fatigue prevention (throttling)
-- [ ] Priority-based routing
-- [ ] In-app notification UI
+- [ ] AlertDecisionEngine — deterministic pattern + risk threshold evaluation
+- [ ] AlertRouter — event bus subscriber, throttle enforcement, DB persistence
+- [ ] Active alerts API — GET /patients/{id}/alerts, POST acknowledge, POST dismiss
+- [ ] DB migration 003 — active alerts schema
+- [ ] useAlerts hook — polling, acknowledge/dismiss actions
+- [ ] AlertCard component — severity badges, explainable rationale, action buttons
+- [ ] AlertsSection on NowPage — active alerts shown above intelligence panel
+- [ ] Unit tests — AlertDecisionEngine threshold logic, throttle constants
+- [ ] AlertRouter wired into FastAPI app
+- [ ] Telegram/push notification dispatch
+- [ ] Fatigue prevention quiet-hours config
 
 #### Definition of Done
 - Notifications respect user preferences
