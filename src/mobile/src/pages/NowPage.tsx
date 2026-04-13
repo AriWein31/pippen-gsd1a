@@ -1,12 +1,14 @@
 import React from 'react';
 import { Card, CardContent } from '../components/Card';
 import { ActiveCourseCard } from '../components/ActiveCourseCard';
+import { IntelligenceCard } from '../components/IntelligenceCard';
 import { SyncStatus } from '../components/SyncStatus';
 import { useActiveCourse } from '../hooks';
+import { useIntelligence } from '../hooks/useIntelligence';
 import { GlucoseIcon, CornstarchIcon, MealIcon, SymptomIcon, ChevronRightIcon } from '../components/Icons';
 import { useNavigate } from 'react-router-dom';
 
-const PATIENT_ID = import.meta.env.VITE_PATIENT_ID || 'default-patient';
+const PATIENT_ID = import.meta.env.VITE_PATIENT_ID;
 
 interface QuickActionProps {
   icon: React.FC<{ size?: number; color?: string }>;
@@ -29,6 +31,7 @@ const QuickAction: React.FC<QuickActionProps> = ({ icon: Icon, label, onClick })
 export const NowPage: React.FC = () => {
   const navigate = useNavigate();
   const { course, loading, error, refetch } = useActiveCourse(PATIENT_ID);
+  const { risk, baselines, patterns, brief, isLoading: intelLoading, hasSufficientData, isDegraded, isConfigured, refetch: refetchIntel } = useIntelligence();
 
   const handleQuickAction = (path: string): void => {
     navigate(`/actions?form=${path}`);
@@ -63,6 +66,24 @@ export const NowPage: React.FC = () => {
           loading={loading}
           error={error}
           onRefresh={refetch}
+        />
+      </section>
+
+      {/* Intelligence Panel */}
+      <section className="px-4 py-6">
+        <h2 className="text-sm font-semibold text-[#8A8E97] uppercase tracking-wide mb-3">
+          Overnight Intelligence
+        </h2>
+        <IntelligenceCard
+          risk={risk}
+          brief={brief}
+          baselines={baselines}
+          patterns={patterns}
+          isLoading={intelLoading}
+          hasSufficientData={hasSufficientData}
+          isDegraded={isDegraded}
+          isConfigured={isConfigured}
+          onRefresh={refetchIntel}
         />
       </section>
 

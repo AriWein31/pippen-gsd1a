@@ -9,7 +9,7 @@ import { isOnline } from '../../api/client';
 import { validateGlucose } from '../../utils/helpers';
 import type { GlucoseEntry, GlucoseContext } from '../../types';
 
-const PATIENT_ID = import.meta.env.VITE_PATIENT_ID || 'default-patient';
+const PATIENT_ID = import.meta.env.VITE_PATIENT_ID;
 
 interface GlucoseFormProps {
   onSuccess?: () => void;

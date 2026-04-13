@@ -7,7 +7,7 @@ import { addEntry, queueEntrySync } from '../../db/database';
 import { validateCornstarch } from '../../utils/helpers';
 import type { CornstarchEntry } from '../../types';
 
-const PATIENT_ID = import.meta.env.VITE_PATIENT_ID || 'default-patient';
+const PATIENT_ID = import.meta.env.VITE_PATIENT_ID;
 
 interface CornstarchFormProps {
   onSuccess?: () => void;

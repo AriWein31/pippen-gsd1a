@@ -99,6 +99,74 @@ export interface ApiResponse<T> {
   error?: string;
 }
 
+// Intelligence types (Week 6)
+export interface BaselineMetric {
+  metric_type: string;
+  value: number | null;
+  unit: string;
+  confidence: number;
+  sample_count: number;
+  qualifying_days: number;
+  computed_at: string;
+  valid_until: string;
+  rationale: string;
+  supporting_event_ids: string[];
+  metadata: Record<string, unknown>;
+}
+
+export interface PatternSignal {
+  pattern_type: string;
+  severity: number;
+  confidence: number;
+  reason: string;
+  supporting_event_ids: string[];
+  detected_at: string;
+  sample_count: number;
+  metadata: Record<string, unknown>;
+}
+
+export interface RiskScore {
+  patient_id: string;
+  risk_score: number;
+  risk_level: 'low' | 'medium' | 'high' | 'critical';
+  confidence: number;
+  factors: Array<{
+    factor: string;
+    weight: number;
+    severity: number;
+    confidence: number;
+    reason: string;
+  }>;
+  supporting_events: string[];
+  generated_at: string;
+}
+
+export interface DailyBrief {
+  brief_date: string;
+  patient_id: string;
+  summary: string;
+  what_changed: string[];
+  what_matters: string[];
+  recommended_attention: string[];
+  confidence: number;
+  supporting_events: string[];
+  generated_at: string;
+}
+
+// Intelligence aggregated view for Now page
+export interface IntelligenceView {
+  risk: RiskScore | null;
+  baselines: BaselineMetric[];
+  patterns: PatternSignal[];
+  brief: DailyBrief | null;
+  isLoading: boolean;
+  hasSufficientData: boolean;
+  /** True when one or more intelligence endpoints failed */
+  isDegraded: boolean;
+  /** True when VITE_PATIENT_ID is not set — intelligence is unavailable */
+  isConfigured: boolean;
+}
+
 // Form validation
 export interface ValidationError {
   field: string;

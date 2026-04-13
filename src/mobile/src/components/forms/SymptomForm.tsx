@@ -8,7 +8,7 @@ import { addEntry, queueEntrySync } from '../../db/database';
 import { validateSeverity } from '../../utils/helpers';
 import type { SymptomEntry, SymptomType } from '../../types';
 
-const PATIENT_ID = import.meta.env.VITE_PATIENT_ID || 'default-patient';
+const PATIENT_ID = import.meta.env.VITE_PATIENT_ID;
 
 interface SymptomFormProps {
   onSuccess?: () => void;

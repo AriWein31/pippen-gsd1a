@@ -7,7 +7,7 @@ import { MealIcon } from '../Icons';
 import { addEntry, queueEntrySync } from '../../db/database';
 import type { MealEntry, MealType } from '../../types';
 
-const PATIENT_ID = import.meta.env.VITE_PATIENT_ID || 'default-patient';
+const PATIENT_ID = import.meta.env.VITE_PATIENT_ID;
 
 interface MealFormProps {
   onSuccess?: () => void;

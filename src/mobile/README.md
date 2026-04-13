@@ -61,7 +61,7 @@ cp .env.example .env
 
 Edit `.env`:
 - `VITE_API_BASE` - Backend API URL
-- `VITE_PATIENT_ID` - Patient identifier
+- `VITE_PATIENT_ID` - Patient identifier **(required — no fallback; must be set for intelligence and sync to function)**
 
 ### Development
 
@@ -123,6 +123,10 @@ The app integrates with these backend endpoints:
 | `/patients/{id}/meals` | POST | Log meal |
 | `/patients/{id}/symptoms` | POST | Log symptom |
 | `/patients/{id}/active-course` | GET | Get active coverage |
+| `/patients/{id}/risk` | GET | Overnight risk score |
+| `/patients/{id}/baselines` | GET | Baseline glucose metrics |
+| `/patients/{id}/patterns` | GET | Detected glucose patterns |
+| `/patients/{id}/daily-brief` | GET | Daily intelligence brief |
 
 ## Design System
 
