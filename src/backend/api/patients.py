@@ -10,9 +10,13 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, Field
-from pydantic import ConfigDict
+from fastapi import APIRouter, Body, FastAPI, HTTPException, status
+from pydantic import BaseModel, ConfigDict, Field
+
+from ..intelligence.baseline import BaselineEngine
+from ..intelligence.brief import BriefGenerator
+from ..intelligence.patterns import PatternEngine
+from ..intelligence.risk import RiskEngine
 
 
 # Request/Response Models
@@ -89,6 +93,55 @@ class ErrorResponse(BaseModel):
     """Error response body."""
     error: str
     detail: Optional[str] = None
+
+
+class DailyBriefResponse(BaseModel):
+    """Patient-facing daily brief payload."""
+
+    brief_date: str
+    patient_id: str
+    summary: str
+    what_changed: list[str]
+    what_matters: list[str]
+    recommended_attention: list[str]
+    confidence: float
+    supporting_events: list[str]
+    generated_at: str
+
+
+class BaselineMetricResponse(BaseModel):
+    metric_type: str
+    value: Optional[float]
+    unit: str
+    confidence: float
+    sample_count: int
+    qualifying_days: int
+    computed_at: str
+    valid_until: str
+    rationale: str
+    supporting_event_ids: list[str]
+    metadata: dict
+
+
+class PatternSignalResponse(BaseModel):
+    pattern_type: str
+    severity: int
+    confidence: float
+    reason: str
+    supporting_event_ids: list[str]
+    detected_at: str
+    sample_count: int
+    metadata: dict
+
+
+class RiskScoreResponse(BaseModel):
+    patient_id: str
+    risk_score: float
+    risk_level: str
+    confidence: float
+    factors: list[dict]
+    supporting_events: list[str]
+    generated_at: str
 
 
 # Database dependency (would be injected in real app)
@@ -212,6 +265,62 @@ def create_patients_router(pool):
         
         return _row_to_patient_response(row)
     
+    async def _require_patient(patient_id: str):
+        async with pool.acquire() as conn:
+            patient = await conn.fetchrow(
+                "SELECT id FROM patients WHERE id = $1",
+                patient_id,
+            )
+        if not patient:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Patient {patient_id} not found",
+            )
+        return patient
+
+    @router.get("/{patient_id}/baselines", response_model=list[BaselineMetricResponse])
+    async def get_patient_baselines(patient_id: str) -> list[BaselineMetricResponse]:
+        """Compute and return current patient baselines."""
+        await _require_patient(patient_id)
+        engine = BaselineEngine(pool)
+        baselines = await engine.compute_baselines(patient_id)
+        return [BaselineMetricResponse(**metric.to_record()) for metric in baselines.metrics.values()]
+
+    @router.get("/{patient_id}/patterns", response_model=list[PatternSignalResponse])
+    async def get_patient_patterns(patient_id: str) -> list[PatternSignalResponse]:
+        """Compute and return active patient patterns."""
+        await _require_patient(patient_id)
+        engine = PatternEngine(pool)
+        patterns = await engine.compute_patterns(patient_id)
+        return [PatternSignalResponse(**pattern.to_record()) for pattern in patterns]
+
+    @router.get("/{patient_id}/daily-brief", response_model=DailyBriefResponse)
+    async def get_daily_brief(patient_id: str) -> DailyBriefResponse:
+        """Get today's daily intelligence brief for a patient."""
+        await _require_patient(patient_id)
+        generator = BriefGenerator(pool)
+        brief = await generator.get_daily_brief(patient_id)
+        return DailyBriefResponse(**brief.to_record())
+
+    @router.get("/{patient_id}/risk", response_model=RiskScoreResponse)
+    async def get_patient_risk(patient_id: str) -> RiskScoreResponse:
+        """Compute and return current overnight risk score."""
+        await _require_patient(patient_id)
+        engine = RiskEngine(pool)
+        risk = await engine.compute_risk(patient_id)
+        return RiskScoreResponse(**risk.to_record())
+
+    @router.post("/admin/regenerate-briefs", response_model=list[DailyBriefResponse])
+    async def regenerate_briefs(patient_ids: list[str] = Body(...)) -> list[DailyBriefResponse]:
+        """Backfill today's briefs for the provided patients."""
+        generator = BriefGenerator(pool)
+        briefs: list[DailyBriefResponse] = []
+        for patient_id in patient_ids:
+            await _require_patient(patient_id)
+            brief = await generator.generate_daily_brief(patient_id)
+            briefs.append(DailyBriefResponse(**brief.to_record()))
+        return briefs
+
     @router.post("/{patient_id}/caregivers", status_code=status.HTTP_201_CREATED, response_model=CaregiverResponse)
     async def add_caregiver(patient_id: str, caregiver: CaregiverCreate) -> CaregiverResponse:
         """
