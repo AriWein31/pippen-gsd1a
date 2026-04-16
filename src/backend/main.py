@@ -25,6 +25,7 @@ from .alarms.notifiers import (
 from .intelligence.alerts import AlertRouter
 from .api.patients import create_patients_router
 from .api.entries import create_entries_router
+from .api.now import create_now_router
 
 logger = logging.getLogger(__name__)
 
@@ -252,11 +253,13 @@ async def lifespan(app: FastAPI):
     app.state.notification_dispatcher = dispatcher
     logger.info("NotificationDispatcher started")
 
-    # Wire patients and entries routers
+    # Wire patients, entries, and now routers
     patients_router = create_patients_router(pool, alert_router)
     entries_router = create_entries_router(pool)
+    now_router = create_now_router(pool, alert_router)
     app.include_router(patients_router)
     app.include_router(entries_router)
+    app.include_router(now_router)
     logger.info("Routers registered")
 
     yield
