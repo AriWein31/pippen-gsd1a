@@ -1,7 +1,7 @@
 # Pippen Team Status
 
-**Last Updated:** 2026-04-13 15:25 IST
-**Reporting Period:** Weeks 1-6 wrapped, Week 7 paused pending later restart
+**Last Updated:** 2026-04-16 19:07 IST
+**Reporting Period:** Weeks 1-7 — backend complete, Week 8 next
 
 ---
 
@@ -9,34 +9,32 @@
 
 | Agent ID | Name | Role | Model | Status | Current Task | Next Check-in |
 |----------|------|------|-------|--------|--------------|---------------|
-| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | GPT-5.4 Codex | 🟢 Active | Project oversight, audits | — |
-| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ Available | Week 1-4 complete | Week 5 support |
-| **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | ✅ **COMPLETE** | **Week 3-4 done** | **Available** |
-| **INTEL-001** | **Candidate 1** | **Intelligence Engineer** | **MiniMax 2.7** | 🟢 **ACTIVE** | **Week 5: Intelligence Layer** | **Daily** |
+| EZRA-001 | Ezra | Project Lead / Architect / Safety Auditor | MiniMax 2.7 | 🟢 Active | Project oversight, audits | — |
+| PITUACH-001 | Pituach | Backend Lead | MiniMax 2.7 | ✅ Available | Week 1-4 complete | Available |
+| **MOBILE-001** | **Candidate 3** | **Mobile Lead** | **MiniMax 2.7** | ✅ **AVAILABLE** | **Week 3-6 complete** | **Available** |
+| **INTEL-001** | **Candidate 1** | **Intelligence Engineer** | **MiniMax 2.7** | 🟢 **ACTIVE** | **Week 7 backend: DONE** | **Week 8 pending** |
 
 ---
 
 ## Recent Updates
 
-### 2026-04-13 — Weeks 5-6 Wrapped and Shipped
+### 2026-04-16 — Week 7 Backend Complete
 
 **Candidate 1 (Intelligence Engineer)**
-- ✅ Week 5 complete: baselines, patterns, daily briefs, risk scoring, and intelligence APIs
-- ✅ Model assignment updated to MiniMax 2.7 for implementation, with Ezra/Codex audit split
-- ✅ Focused backend/API test coverage passing
+- ✅ `main.py` — FastAPI entry point, AlertRouter + NotificationDispatcher wired at startup
+- ✅ `AsyncTelegramNotificationService` — HTTP sender with httpx client reuse + 429 backoff
+- ✅ `NotificationDispatcher` — ALARM_TRIGGERED → caregiver lookup → Telegram send
+- ✅ Quiet hours — timezone-aware via `patient.preferences.timezone`, critical bypasses
 
 **Candidate 3 (Mobile Lead)**
-- ✅ Week 6 complete: Now screen intelligence integration
-- ✅ Added loading, insufficient-data, partial-data, and not-configured states
-- ✅ Mobile reads baselines, patterns, risk, and daily brief
+- ✅ `useAlerts` hook, `AlertCard` component, `NowPage` AlertsSection — all committed
 
-**Repository / shipping status**
-- ✅ Week 5 shipped to GitHub
-- ✅ Week 6 shipped to GitHub
-- ✅ FastAPI and httpx installed locally to unblock API tests
-- ✅ Unit suite passing locally (`pytest tests/unit/` → 12 passed)
-- ⚠️ Full repo pytest still has unrelated legacy harness issues outside the wrapped Week 5-6 scope
-- ⏸️ Week 7 was explored but not wrapped; resume later from a clean restart
+**Ezra Safety Audit (2 passes)**
+- ✅ No hardcoded secrets — all from env vars
+- ✅ Parameterized SQL throughout
+- ✅ CORS locked to localhost:5173
+- ✅ httpx client reuse + clean shutdown
+- ✅ Timezone-aware quiet hours (UTC fallback)
 
 **Sprint Spec:** `docs/sprints/sprint-05-intelligence-layer.md`
 
@@ -59,7 +57,7 @@
 | Week 4 | May 3-9 | ✅ Complete | Night alarm system |
 | **Week 5** | **May 10-16** | ✅ **Shipped** | **Baseline, patterns, briefs, risk, and API endpoints complete** |
 | **Week 6** | **May 17-23** | ✅ **Shipped** | **Now screen intelligence integration complete** |
-| **Week 7** | **May 24-30** | ⏸️ **Paused** | **Started briefly, not wrapped, resume later** |
+| **Week 7** | **May 24-30** | ✅ **Backend DONE** | **AlertRouter + NotificationDispatcher + Telegram sender** |
 
 ---
 
@@ -125,10 +123,10 @@
 
 ## Current Priorities
 
-1. **Pause Week 7 cleanly** — do not mix unfinished alerting work into the Week 5-6 wrap-up
-2. **Resume Week 7 later today** — restart from clean scope and file state
-3. **Resolve remaining repo test noise** — legacy e2e/integration harness still needs cleanup outside Week 5-6
-4. **Keep docs aligned** — use Team Status + README as source of truth for shipped scope
+1. **Week 8 — Demo-ready full intelligence** — Now screen shows "what changed / what matters / what to do"
+2. **End-to-end test** — run with `DATABASE_URL` + `TELEGRAM_BOT_TOKEN`, verify caregiver Telegram messages
+3. **Push notifications** — iOS APNs / Android FCM (not yet wired)
+4. **Week 7 mobile code audit** — useAlerts + AlertCard still needs Ezra review
 
 ---
 

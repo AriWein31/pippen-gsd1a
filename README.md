@@ -2,7 +2,7 @@
 
 **Mobile-first intelligence for Glycogen Storage Disease Type 1a.**
 
-[![Week 4 Complete](https://img.shields.io/badge/Week%204-Complete-success)](./docs/sprints/sprint-04-night-alarm.md)
+[![Week 7 Complete](https://img.shields.io/badge/Week%207-Backend%20Complete-success)](./docs/sprints/sprint-07-alert-notifications.md)
 [![Tests](https://img.shields.io/badge/tests-2%20passing-brightgreen)](./tests/)
 [![Safety Audit](https://img.shields.io/badge/Safety%20Audit-Passed-blue)](./docs/audits/)
 
@@ -24,13 +24,13 @@ Pippen transforms this from burden to intelligence: calm, predictive, and medica
 
 ---
 
-## Current Status: Weeks 1-6 Complete ✅
+## Current Status: Weeks 1-7 Complete ✅
 
 | Phase | Weeks | Status | Deliverable |
 |-------|-------|--------|-------------|
 | **Phase 1: Foundation** | 1-4 | ✅ **COMPLETE** | Mobile app + night alarms |
-| **Phase 2: Intelligence (Weeks 5-6 delivered)** | 5-6 | ✅ **COMPLETE** | Baselines, patterns, risk, daily briefs, mobile intelligence UI |
-| Phase 2 continuation | 7-8 | 🟡 Not wrapped yet | Smart notifications + further delivery |
+| **Phase 2: Intelligence** | 5-7 | ✅ **BACKEND DONE** | Baselines, patterns, risk, briefs, AlertRouter, Telegram notifications |
+| Phase 2 continuation | 8 | 🟡 Next | Demo-ready full intelligence + end-to-end test |
 | Phase 3: Research & Chat | 9-12 | ⚪ Not Started | Research monitoring + Ask Pippen |
 | Phase 4: Production | 13-16 | ⚪ Not Started | Security + launch readiness |
 
@@ -44,7 +44,7 @@ Pippen transforms this from burden to intelligence: calm, predictive, and medica
 | Week 4 | ✅ Complete | **Night alarm system** (safety-critical) | Pituach + Ezra |
 | Week 5 | ✅ Complete | Baselines, patterns, daily briefs, risk scoring, intelligence APIs | Candidate 1 + Ezra audit |
 | Week 6 | ✅ Complete | Now screen intelligence integration, config/degraded states, mobile polish | Candidate 3 + Ezra audit |
-| Week 7 | 🟡 Started only | Alerting/notification work in progress, not wrapped | Candidate 1 + Candidate 3 |
+| Week 7 | ✅ Backend Done | AlertRouter, NotificationDispatcher, AsyncTelegramNotificationService, quiet hours | Candidate 1 |
 
 ---
 
@@ -201,10 +201,10 @@ npm run preview
 
 | Role | Agent | Model | Status |
 |------|-------|-------|--------|
-| **Project Lead / Architect** | **Ezra** | **GPT-5.4 Codex** | 🟢 Active |
+| **Project Lead / Architect** | **Ezra** | **MiniMax 2.7** | 🟢 Active |
 | Backend Lead | Pituach | MiniMax 2.7 | ✅ Available |
-| Mobile Lead | Candidate 3 | MiniMax 2.7 | 🟢 Week 3-4 complete |
-| **Intelligence Engineer** | **Candidate 1** | **MiniMax 2.7** | ✅ **Week 5-6 delivered** |
+| Mobile Lead | Candidate 3 | MiniMax 2.7 | ✅ Week 3-6 complete |
+| **Intelligence Engineer** | **Candidate 1** | **MiniMax 2.7** | ✅ **Week 7 backend done** |
 | QA / Safety Auditor | Ezra | GPT-5.4 Codex | 🟢 Active |
 
 ---
@@ -306,4 +306,4 @@ Proprietary — All rights reserved.
 
 **Questions?** Check the [Project Planning Sheet](./docs/PROJECT_PLAN.md) or ask Ezra.
 
-**Status:** Phase 1 complete. Ready for Week 5 (Intelligence Layer).
+**Status:** Phase 2 backend complete. Week 8 next — demo-ready intelligence + end-to-end Telegram test.

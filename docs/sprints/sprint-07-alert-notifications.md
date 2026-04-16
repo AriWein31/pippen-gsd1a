@@ -4,7 +4,11 @@
 **Goal:** Turn intelligence (risk scores, patterns, briefs) into actionable, explainable alerts  
 **Lead:** Candidate 1 (backend), Candidate 3 (mobile UX)  
 **Model:** MiniMax 2.7  
-**Status:** 🟡 In Progress
+**Status:** ✅ Backend Complete (2026-04-16)
+
+**Commits:**
+- `f857dd0` — Week 7: FastAPI main.py, AsyncTelegramNotificationService, NotificationDispatcher, quiet hours
+- `a2577cc` — Fix: httpx client reuse + timezone-aware quiet hours
 
 ---
 
@@ -174,4 +178,4 @@ Add alerts section to NowPage, above the Intelligence Panel:
 
 ---
 
-**Last Updated:** 2026-04-13
+**Last Updated:** 2026-04-16
