@@ -13,6 +13,7 @@ from typing import Optional
 from fastapi import APIRouter, Body, FastAPI, HTTPException, status
 from pydantic import BaseModel, ConfigDict, Field
 
+from ..intelligence.alerts import AlertRouter
 from ..intelligence.baseline import BaselineEngine
 from ..intelligence.brief import BriefGenerator
 from ..intelligence.patterns import PatternEngine
@@ -144,6 +145,29 @@ class RiskScoreResponse(BaseModel):
     generated_at: str
 
 
+class AlertResponse(BaseModel):
+    """Active alert payload returned to mobile clients."""
+    id: str
+    patient_id: str
+    title: str
+    description: str
+    rationale: str
+    alert_severity: str  # 'low' | 'medium' | 'high' | 'critical'
+    source: str  # 'pattern' | 'risk'
+    source_id: str
+    confidence: float
+    triggered_by_event_ids: list[str]
+    is_acknowledged: bool
+    is_dismissed: bool
+    created_at: str
+    expires_at: Optional[str] = None
+
+
+class AlertsListResponse(BaseModel):
+    alerts: list[AlertResponse]
+    count: int
+
+
 # Database dependency (would be injected in real app)
 
 async def get_db_pool():
@@ -154,9 +178,14 @@ async def get_db_pool():
 
 # Router factory
 
-def create_patients_router(pool):
-    """Create FastAPI router with patient endpoints."""
-    
+def create_patients_router(pool, alert_router: Optional[AlertRouter] = None):
+    """Create FastAPI router with patient endpoints.
+
+    Args:
+        pool: PostgreSQL connection pool.
+        alert_router: Optional AlertRouter instance for Week 7 alert endpoints.
+    """
+
     router = APIRouter(prefix="/patients", tags=["patients"])
     
     @router.post("", status_code=status.HTTP_201_CREATED, response_model=PatientResponse)
@@ -309,6 +338,70 @@ def create_patients_router(pool):
         engine = RiskEngine(pool)
         risk = await engine.compute_risk(patient_id)
         return RiskScoreResponse(**risk.to_record())
+
+    # ---- Week 7: Active Alerts ----
+
+    @router.get("/{patient_id}/alerts", response_model=AlertsListResponse)
+    async def get_patient_alerts(
+        patient_id: str,
+        limit: int = 10,
+    ) -> AlertsListResponse:
+        """Fetch unacknowledged, undismissed alerts for a patient."""
+        await _require_patient(patient_id)
+        if alert_router is None:
+            return AlertsListResponse(alerts=[], count=0)
+        alerts = await alert_router.get_active_alerts(patient_id, limit=limit)
+        return AlertsListResponse(
+            alerts=[AlertResponse(
+                id=a.id,
+                patient_id=a.patient_id,
+                title=a.title,
+                description=a.description,
+                rationale=a.rationale,
+                alert_severity=a.alert_severity,
+                source=a.source,
+                source_id=a.source_id,
+                confidence=a.confidence,
+                triggered_by_event_ids=a.triggered_by_event_ids,
+                is_acknowledged=a.is_acknowledged,
+                is_dismissed=a.is_dismissed,
+                created_at=a.created_at,
+                expires_at=a.expires_at,
+            ) for a in alerts],
+            count=len(alerts),
+        )
+
+    @router.post("/{patient_id}/alerts/{alert_id}/acknowledge", status_code=status.HTTP_204_NO_CONTENT)
+    async def acknowledge_alert(patient_id: str, alert_id: str) -> None:
+        """Mark an alert as acknowledged."""
+        await _require_patient(patient_id)
+        if alert_router is None:
+            raise HTTPException(
+                status_code=status.HTTP_501_NOT_IMPLEMENTED,
+                detail="Alert router not configured",
+            )
+        found = await alert_router.acknowledge_alert(alert_id)
+        if not found:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Alert {alert_id} not found",
+            )
+
+    @router.post("/{patient_id}/alerts/{alert_id}/dismiss", status_code=status.HTTP_204_NO_CONTENT)
+    async def dismiss_alert(patient_id: str, alert_id: str) -> None:
+        """Mark an alert as dismissed."""
+        await _require_patient(patient_id)
+        if alert_router is None:
+            raise HTTPException(
+                status_code=status.HTTP_501_NOT_IMPLEMENTED,
+                detail="Alert router not configured",
+            )
+        found = await alert_router.dismiss_alert(alert_id)
+        if not found:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Alert {alert_id} not found",
+            )
 
     @router.post("/admin/regenerate-briefs", response_model=list[DailyBriefResponse])
     async def regenerate_briefs(patient_ids: list[str] = Body(...)) -> list[DailyBriefResponse]:

@@ -153,6 +153,24 @@ export interface DailyBrief {
   generated_at: string;
 }
 
+// Alert types (Week 7)
+export interface Alert {
+  id: string;
+  patient_id: string;
+  title: string;
+  description: string;
+  rationale: string;
+  alert_severity: 'low' | 'medium' | 'high' | 'critical';
+  source: 'pattern' | 'risk';
+  source_id: string;
+  confidence: number;
+  triggered_by_event_ids: string[];
+  is_acknowledged: boolean;
+  is_dismissed: boolean;
+  created_at: string;
+  expires_at: string | null;
+}
+
 // Intelligence aggregated view for Now page
 export interface IntelligenceView {
   risk: RiskScore | null;

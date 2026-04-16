@@ -17,6 +17,7 @@ Core rules:
 from __future__ import annotations
 
 import asyncio
+import logging
 import uuid
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -24,6 +25,8 @@ from enum import Enum
 from typing import Optional, Protocol, Sequence
 
 import asyncpg
+
+logger = logging.getLogger(__name__)
 
 from ..events.bus import get_event_bus, EventTypes
 

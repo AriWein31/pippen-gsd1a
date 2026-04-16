@@ -70,6 +70,12 @@ class AsyncTelegramNotificationService(NotificationService):
         self._max_retries = max_retries
         self._client: Optional[httpx.AsyncClient] = None
 
+    async def _get_client(self) -> httpx.AsyncClient:
+        """Lazily create and reuse a single httpx client."""
+        if self._client is None:
+            self._client = httpx.AsyncClient(timeout=10.0)
+        return self._client
+
     async def send(self, message: NotificationMessage) -> None:
         if not self._bot_token:
             logger.warning(
@@ -98,11 +104,11 @@ class AsyncTelegramNotificationService(NotificationService):
 
         for attempt in range(self._max_retries):
             try:
-                async with httpx.AsyncClient(timeout=10.0) as client:
-                    response = await client.post(
-                        self.BASE_URL.format(bot_token=self._bot_token),
-                        json=payload,
-                    )
+                client = await self._get_client()
+                response = await client.post(
+                    self.BASE_URL.format(bot_token=self._bot_token),
+                    json=payload,
+                )
 
                 if response.status_code == 200:
                     success = True
@@ -165,3 +171,9 @@ class AsyncTelegramNotificationService(NotificationService):
                 "AsyncTelegramNotificationService: all %d attempts failed for chat %s: %s",
                 self._max_retries, chat_id, last_error,
             )
+
+    async def close(self) -> None:
+        """Close the shared httpx client. Call on app shutdown."""
+        if self._client is not None:
+            await self._client.aclose()
+            self._client = None

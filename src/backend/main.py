@@ -155,7 +155,16 @@ class NotificationDispatcher:
         return [dict(row) for row in rows]
 
     async def _is_in_quiet_hours(self, patient_id: str) -> bool:
-        """Check if current time falls within patient's quiet hours."""
+        """Check if current time falls within patient's quiet hours.
+
+        Patient preferences can include:
+          - notification_quiet_hours: {"start": "HH:MM", "end": "HH:MM"}  (interpreted as local time)
+          - timezone: "Asia/Jerusalem"  (IANA timezone, for local→UTC conversion)
+
+        If timezone is not set, quiet hours are interpreted as UTC.
+        """
+        import zoneinfo  # Python 3.9+
+
         async with self.pool.acquire() as conn:
             row = await conn.fetchrow(
                 "SELECT preferences FROM patients WHERE id = $1",
@@ -183,10 +192,21 @@ class NotificationDispatcher:
         except (ValueError, AttributeError):
             return False
 
-        now = datetime.now(timezone.utc)
-        current_minutes = now.hour * 60 + now.minute
+        tz_name = preferences.get("timezone") if isinstance(preferences, dict) else None
+        if tz_name:
+            try:
+                tz = zoneinfo.ZoneInfo(tz_name)
+            except Exception:
+                tz = timezone.utc
+                logger.warning("Invalid timezone '%s' for patient %s, falling back to UTC", tz_name, patient_id)
+        else:
+            tz = timezone.utc
+            logger.debug("No timezone set for patient %s, treating quiet hours as UTC", patient_id)
+
+        now_local = datetime.now(tz)
         start_minutes = start_hour * 60 + start_min
         end_minutes = end_hour * 60 + end_min
+        current_minutes = now_local.hour * 60 + now_local.minute
 
         if start_minutes <= end_minutes:
             # Same day range (e.g., 09:00-17:00)
@@ -243,6 +263,7 @@ async def lifespan(app: FastAPI):
 
     # Shutdown
     await dispatcher.stop()
+    await telegram_service.close()
     await alert_router.stop()
     app.state.db_pool.close()
     logger.info("Shutdown complete")

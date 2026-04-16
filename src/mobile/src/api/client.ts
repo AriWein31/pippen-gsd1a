@@ -9,6 +9,7 @@ import type {
   PatternSignal,
   RiskScore,
   DailyBrief,
+  Alert,
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000/api';
@@ -212,4 +213,36 @@ export function onConnectivityChange(callback: (online: boolean) => void): () =>
     window.removeEventListener('online', handleOnline);
     window.removeEventListener('offline', handleOffline);
   };
+}
+
+// ---- Week 7: Alerts ----
+
+export interface AlertsResponse {
+  alerts: Alert[];
+  count: number;
+}
+
+// Fetch active (unacknowledged, undismissed) alerts for a patient
+export async function fetchAlerts(patientId: string): Promise<ApiResponse<AlertsResponse>> {
+  return fetchApi<AlertsResponse>(`/patients/${patientId}/alerts`);
+}
+
+// Acknowledge an alert
+export async function acknowledgeAlert(
+  patientId: string,
+  alertId: string
+): Promise<ApiResponse<void>> {
+  return fetchApi<void>(`/patients/${patientId}/alerts/${alertId}/acknowledge`, {
+    method: 'POST',
+  });
+}
+
+// Dismiss an alert
+export async function dismissAlert(
+  patientId: string,
+  alertId: string
+): Promise<ApiResponse<void>> {
+  return fetchApi<void>(`/patients/${patientId}/alerts/${alertId}/dismiss`, {
+    method: 'POST',
+  });
 }

@@ -2,9 +2,11 @@ import React from 'react';
 import { Card, CardContent } from '../components/Card';
 import { ActiveCourseCard } from '../components/ActiveCourseCard';
 import { IntelligenceCard } from '../components/IntelligenceCard';
+import { AlertCard } from '../components/AlertCard';
 import { SyncStatus } from '../components/SyncStatus';
 import { useActiveCourse } from '../hooks';
 import { useIntelligence } from '../hooks/useIntelligence';
+import { useAlerts } from '../hooks/useAlerts';
 import { GlucoseIcon, CornstarchIcon, MealIcon, SymptomIcon, ChevronRightIcon } from '../components/Icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +34,7 @@ export const NowPage: React.FC = () => {
   const navigate = useNavigate();
   const { course, loading, error, refetch } = useActiveCourse(PATIENT_ID);
   const { risk, baselines, patterns, brief, isLoading: intelLoading, hasSufficientData, isDegraded, isConfigured, refetch: refetchIntel } = useIntelligence();
+  const { alerts, hasActiveAlerts, acknowledge, dismiss } = useAlerts();
 
   const handleQuickAction = (path: string): void => {
     navigate(`/actions?form=${path}`);
@@ -55,6 +58,25 @@ export const NowPage: React.FC = () => {
           <SyncStatus pendingCount={0} />
         </div>
       </header>
+
+      {/* Alerts Panel — Week 7 */}
+      {hasActiveAlerts && (
+        <section className="px-4 pt-6 pb-0">
+          <h2 className="text-sm font-semibold text-[#8A8E97] uppercase tracking-wide mb-3">
+            Active Alerts
+          </h2>
+          <div className="flex flex-col gap-3">
+            {alerts.map(alert => (
+              <AlertCard
+                key={alert.id}
+                alert={alert}
+                onAcknowledge={acknowledge}
+                onDismiss={dismiss}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Active Coverage */}
       <section className="px-4 py-6">
