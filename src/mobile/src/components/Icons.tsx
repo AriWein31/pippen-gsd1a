@@ -193,3 +193,23 @@ export const BellIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor
     <path d="M13.73 21a2 2 0 0 1-3.46 0" />
   </svg>
 );
+
+export const TrendingUpIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="23,6 13.5,15.5 8.5,10.5 1,18" />
+    <polyline points="17,6 23,6 23,12" />
+  </svg>
+);
+
+export const TrendingDownIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <polyline points="23,18 13.5,8.5 8.5,13.5 1,6" />
+    <polyline points="17,18 23,18 23,12" />
+  </svg>
+);
+
+export const MinusIcon: React.FC<IconProps> = ({ size = 24, color = 'currentColor', className }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);

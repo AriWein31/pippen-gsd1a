@@ -246,3 +246,40 @@ export async function dismissAlert(
     method: 'POST',
   });
 }
+
+// ---- Week 8: Now Screen ----
+
+export interface Recommendation {
+  id: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  category: 'glucose' | 'timing' | 'pattern' | 'safety' | 'general';
+  headline: string;
+  explanation: string;
+  suggested_action: string;
+  confidence: number;
+  sources: string[];
+  created_at: string;
+}
+
+export interface Change {
+  metric: string;
+  direction: 'up' | 'down' | 'stable';
+  delta: number;
+  delta_pct: number;
+  summary: string;
+}
+
+export interface NowScreen {
+  patient_id: string;
+  generated_at: string;
+  recommendations: Recommendation[];
+  changes: Change[];
+  risk: RiskScore;
+  brief: DailyBrief;
+  active_alerts: Alert[];
+}
+
+// Fetch the unified Now screen data
+export async function fetchNow(patientId: string): Promise<ApiResponse<NowScreen>> {
+  return fetchApi<NowScreen>(`/patients/${patientId}/now`);
+}

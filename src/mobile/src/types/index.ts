@@ -153,6 +153,28 @@ export interface DailyBrief {
   generated_at: string;
 }
 
+// Recommendation (Week 8)
+export interface Recommendation {
+  id: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  category: 'glucose' | 'timing' | 'pattern' | 'safety' | 'general';
+  headline: string;
+  explanation: string;
+  suggested_action: string;
+  confidence: number;
+  sources: string[];
+  created_at: string;
+}
+
+// Change detection (Week 8)
+export interface Change {
+  metric: string;
+  direction: 'up' | 'down' | 'stable';
+  delta: number;
+  delta_pct: number;
+  summary: string;
+}
+
 // Alert types (Week 7)
 export interface Alert {
   id: string;

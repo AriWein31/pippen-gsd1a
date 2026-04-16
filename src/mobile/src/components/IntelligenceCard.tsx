@@ -2,17 +2,69 @@ import React from 'react';
 import { Card, CardContent } from './Card';
 import { BrainIcon, AlertTriangleIcon, CheckCircleIcon, InfoIcon } from './Icons';
 import type { RiskScore, DailyBrief, BaselineMetric } from '../types';
+import type { Recommendation } from '../api/client';
+
+// ─── Priority badge ───────────────────────────────────────────────────────────
+
+const REC_PRIORITY_CONFIG: Record<
+  Recommendation['priority'],
+  { label: string; bg: string; text: string; dot: string; border: string }
+> = {
+  critical: { label: 'Critical', bg: 'bg-red-50', text: 'text-red-700', dot: 'bg-red-500', border: 'border-red-200' },
+  high:     { label: 'High',     bg: 'bg-orange-50', text: 'text-orange-700', dot: 'bg-orange-500', border: 'border-orange-200' },
+  medium:   { label: 'Medium',   bg: 'bg-amber-50',  text: 'text-amber-700',  dot: 'bg-amber-500',  border: 'border-amber-200' },
+  low:      { label: 'Low',      bg: 'bg-blue-50',   text: 'text-blue-700',   dot: 'bg-blue-500',   border: 'border-blue-200' },
+};
+
+function RecommendationBadge({ priority }: { priority: Recommendation['priority'] }) {
+  const c = REC_PRIORITY_CONFIG[priority];
+  const pulse = priority === 'critical' || priority === 'high';
+  return (
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${c.bg} ${c.text} ${c.border}`}>
+      {pulse && <span className={`w-1.5 h-1.5 rounded-full ${c.dot} animate-pulse`} />}
+      {c.label}
+    </span>
+  );
+}
+
+// ─── Recommendation card ─────────────────────────────────────────────────────
+
+function RecommendationCardView({ rec }: { rec: Recommendation }) {
+  const c = REC_PRIORITY_CONFIG[rec.priority];
+  return (
+    <div className={`rounded-xl border ${c.border} ${c.bg} p-4 flex flex-col gap-2`}>
+      <div className="flex items-start justify-between gap-2">
+        <RecommendationBadge priority={rec.priority} />
+        <span className="text-xs opacity-50 text-right flex-shrink-0">
+          {Math.round(rec.confidence * 100)}% confidence
+        </span>
+      </div>
+      <p className="font-semibold text-[#1A1D21] leading-snug text-sm">{rec.headline}</p>
+      <p className="text-xs text-[#4B5563] leading-relaxed">{rec.explanation}</p>
+      {rec.suggested_action && (
+        <div className="flex items-start gap-2 p-2 bg-white/60 rounded-lg border border-[#E5E7EB]">
+          <span className="text-sm text-[#315BFF] flex-shrink-0">→</span>
+          <p className="text-xs text-[#1A1D21] font-medium">{rec.suggested_action}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── IntelligenceCard props ────────────────────────────────────────────────────
 
 interface IntelligenceCardProps {
-  risk: RiskScore | null;
-  brief: DailyBrief | null;
-  baselines: BaselineMetric[];
-  patterns: Array<{ pattern_type: string; severity: number; confidence: number; reason: string }>;
-  isLoading: boolean;
-  hasSufficientData: boolean;
-  isDegraded: boolean;
-  isConfigured: boolean;
-  onRefresh: () => void;
+  risk?: RiskScore | null;
+  brief?: DailyBrief | null;
+  baselines?: BaselineMetric[];
+  patterns?: Array<{ pattern_type: string; severity: number; confidence: number; reason: string }>;
+  isLoading?: boolean;
+  hasSufficientData?: boolean;
+  isDegraded?: boolean;
+  isConfigured?: boolean;
+  onRefresh?: () => void;
+  /** Week 8: render individual recommendation cards */
+  recommendations?: Recommendation[];
 }
 
 function RiskBadge({ level }: { level: string }) {
@@ -49,7 +101,18 @@ export const IntelligenceCard: React.FC<IntelligenceCardProps> = ({
   isDegraded,
   isConfigured,
   onRefresh,
+  recommendations = [],
 }) => {
+  // ── Week 8: Recommendation rendering mode ────────────────────────────────
+  if (recommendations.length > 0) {
+    return (
+      <div className="flex flex-col gap-3">
+        {recommendations.map((rec) => (
+          <RecommendationCardView key={rec.id} rec={rec} />
+        ))}
+      </div>
+    );
+  }
   if (isLoading) {
     return (
       <Card className="animate-pulse">
@@ -118,8 +181,8 @@ export const IntelligenceCard: React.FC<IntelligenceCardProps> = ({
   const riskLevel = risk?.risk_level ?? 'low';
 
   // Build a short status line from baselines
-  const avgGlucose = baselines.find(m => m.metric_type === 'overnight_average_glucose');
-  const gapFreq = baselines.find(m => m.metric_type === 'coverage_gap_frequency');
+  const avgGlucose = baselines?.find(m => m.metric_type === 'overnight_average_glucose');
+  const gapFreq = baselines?.find(m => m.metric_type === 'coverage_gap_frequency');
 
   return (
     <Card variant="outlined">
@@ -191,12 +254,12 @@ export const IntelligenceCard: React.FC<IntelligenceCardProps> = ({
           </div>
         )}
 
-        {patterns.length > 0 && (
+        {(patterns?.length ?? 0) > 0 && (
           <div className="mt-3 pt-3 border-t border-[#E5E7EB]">
             <p className="text-xs font-semibold text-[#8A8E97] uppercase tracking-wide mb-2">
               Detected Patterns
             </p>
-            {patterns.slice(0, 3).map((p, i) => (
+            {patterns?.slice(0, 3).map((p, i) => (
               <p key={i} className="text-xs text-[#8A8E97] mt-1">
                 · {p.reason.length > 80 ? p.reason.slice(0, 80) + '…' : p.reason}
               </p>
