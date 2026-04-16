@@ -4,7 +4,12 @@
 **Goal:** Synthesize all intelligence signals into a demo-ready Now screen with actionable recommendations
 **Lead:** Candidate 1 (intelligence + backend), Candidate 3 (mobile)
 **Model:** MiniMax 2.7
-**Status:** 🟡 In Progress
+**Status:** ✅ Backend Complete + Ezra Audit Passed (2026-04-16)
+
+**Commits:**
+- `7b30bb2` — Sprint 08 backend: RecommendationEngine, ChangeDetector, /now endpoint, e2e script
+- `41ee6ee` — Sprint 08 mobile: NowPage rewrite, useNow hook, RecommendationCard, ChangesPanel
+- `dd53d06` — Ezra audit fixes: asyncio import order, MOCK_NOW generic data, timezone-aware bedtime timing
 
 ---
 
@@ -222,3 +227,15 @@ Manual test script to verify the full loop:
 ---
 
 **Last Updated:** 2026-04-16
+
+### Audit Findings (Ezra, 2 passes)
+
+**Fixed:**
+- `asyncio` import at bottom of `recommendations.py` — moved to top
+- `MOCK_NOW` had specific patient-like values — replaced with generic placeholders
+- `ChangeDetector` assumed naive datetimes were UTC — now uses patient timezone from preferences, with UTC fallback
+
+**Noted (acceptable for MVP):**
+- `handleDismissRecommendation` is a no-op stub — backend dismiss action not wired yet
+- `AlertCard` `onAcknowledge`/`onDismiss` are empty stubs — fine for MVP phase
+- `ChangeDetector.compare_weeks` uses two sequential queries instead of parallel — low volume, acceptable
