@@ -124,8 +124,9 @@ class ChangeDetector:
         changes.append(self._compare_variability(current_glucose, prior_glucose))
 
         # Bedtime dose timing
-        current_timing = self._compute_bedtime_timing(current_events)
-        prior_timing = self._compute_bedtime_timing(prior_events)
+        patient_tz = await self._get_patient_timezone(db_pool, patient_id)
+        current_timing = self._compute_bedtime_timing(current_events, patient_tz)
+        prior_timing = self._compute_bedtime_timing(prior_events, patient_tz)
         if current_timing is not None and prior_timing is not None:
             changes.append(self._compare_bedtime_timing(current_timing, prior_timing))
 
@@ -192,6 +193,22 @@ class ChangeDetector:
     # Helpers
     # ------------------------------------------------------------------
 
+    async def _get_patient_timezone(self, pool, patient_id: str) -> str:
+        """Fetch patient's timezone from preferences, fall back to UTC."""
+        import json
+        async with pool.acquire() as conn:
+            row = await conn.fetchrow(
+                "SELECT preferences FROM patients WHERE id = $1",
+                patient_id,
+            )
+        if not row:
+            return "UTC"
+        prefs = row["preferences"]
+        if isinstance(prefs, str):
+            prefs = json.loads(prefs)
+        tz = prefs.get("timezone") if isinstance(prefs, dict) else None
+        return tz if tz else "UTC"
+
     def _direction_from_delta(self, delta_pct: float) -> str:
         if delta_pct > STABLE_THRESHOLD_PCT:
             return DIRECTION_UP
@@ -208,8 +225,13 @@ class ChangeDetector:
         variance = sum((v - avg) ** 2 for v in values) / len(values)
         return math.sqrt(variance) / avg
 
-    def _compute_bedtime_timing(self, events: list[Event]) -> Optional[float]:
-        """Compute average bedtime dose timing (minutes after 20:00) for events."""
+    def _compute_bedtime_timing(self, events: list[Event], patient_timezone: str = "UTC") -> Optional[float]:
+        """Compute average bedtime dose timing (minutes after 20:00) for events.
+
+        patient_timezone is an IANA timezone string e.g. 'Asia/Jerusalem'.
+        """
+        import zoneinfo
+
         bedtime_doses = [
             e for e in events
             if e.event_type == "cornstarch_dose"
@@ -217,19 +239,26 @@ class ChangeDetector:
         ]
         if not bedtime_doses:
             return None
-        # Bedtime = after 20:00, so compute minutes past 20:00
+        try:
+            tz = zoneinfo.ZoneInfo(patient_timezone)
+        except Exception:
+            tz = timezone.utc
         timings = []
         for event in bedtime_doses:
-            local_time = event.occurred_at.astimezone(timezone.utc)
-            # If before 06:00, treat as late night (same calendar day bedtime)
-            if local_time.hour < 6:
-                # Same day's bedtime dose (before midnight or after midnight before 6am)
-                pass
-            elif local_time.hour >= 20:
-                minutes_past = (local_time.hour - 20) * 60 + local_time.minute
+            # Ensure we have a timezone-aware datetime in the patient's local tz
+            if event.occurred_at.tzinfo is None:
+                local_time = event.occurred_at.replace(tzinfo=timezone.utc).astimezone(tz)
             else:
-                continue
-            timings.append(minutes_past)
+                local_time = event.occurred_at.astimezone(tz)
+            # Bedtime window: after 20:00 or before 06:00
+            if local_time.hour >= 20:
+                minutes_past = (local_time.hour - 20) * 60 + local_time.minute
+                timings.append(minutes_past)
+            elif local_time.hour < 6:
+                # Early morning — same night's bedtime dose (before midnight previous day)
+                # Count as bedtime (e.g., 01:00 → 5 hrs past 20:00 = 300 min)
+                minutes_past = (24 - 20 + local_time.hour) * 60 + local_time.minute
+                timings.append(minutes_past)
         if not timings:
             return None
         return mean(timings)

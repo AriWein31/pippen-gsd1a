@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import uuid
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -563,4 +564,4 @@ def rank_recommendations(
 # Compatibility import for asyncio.gather
 # ---------------------------------------------------------------------------
 
-import asyncio  # noqa: E402, F401
+
