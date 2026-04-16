@@ -1,6 +1,6 @@
 # Pippen Team Status
 
-**Last Updated:** 2026-04-16 19:07 IST
+**Last Updated:** 2026-04-16 20:17 IST
 **Reporting Period:** Weeks 1-7 — backend complete, Week 8 next
 
 ---
@@ -57,7 +57,8 @@
 | Week 4 | May 3-9 | ✅ Complete | Night alarm system |
 | **Week 5** | **May 10-16** | ✅ **Shipped** | **Baseline, patterns, briefs, risk, and API endpoints complete** |
 | **Week 6** | **May 17-23** | ✅ **Shipped** | **Now screen intelligence integration complete** |
-| **Week 7** | **May 24-30** | ✅ **Backend DONE** | **AlertRouter + NotificationDispatcher + Telegram sender** |
+| **Week 7** | **May 24-30** | ✅ **DONE** | **AlertRouter + NotificationDispatcher + Telegram sender** |
+| **Week 8** | **May 31-June 6** | ✅ **DONE** | **RecommendationEngine + ChangeDetector + /now endpoint + NowPage** |
 
 ---
 
@@ -123,10 +124,10 @@
 
 ## Current Priorities
 
-1. **Week 8 — Demo-ready full intelligence** — Now screen shows "what changed / what matters / what to do"
+1. **Phase 2 complete** — MVP done, Week 8 done, moving to Phase 3 (Research & Chat)
 2. **End-to-end test** — run with `DATABASE_URL` + `TELEGRAM_BOT_TOKEN`, verify caregiver Telegram messages
-3. **Push notifications** — iOS APNs / Android FCM (not yet wired)
-4. **Week 7 mobile code audit** — useAlerts + AlertCard still needs Ezra review
+3. **Phase 3: Research Engine** — Weeks 9-12: source registry, PubMed API, claim extraction
+4. **Push notifications** — iOS APNs / Android FCM (not yet wired)
 
 ---
 
