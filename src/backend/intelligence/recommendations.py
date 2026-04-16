@@ -161,12 +161,10 @@ class RecommendationEngine:
         list[ActiveAlert],
     ]:
         async with self.pool.acquire() as conn:
-            brief_row, risk_row, patterns_rows, alerts_rows = await asyncio.gather(
-                self._fetch_brief(patient_id, now, conn),
-                self._fetch_risk(patient_id, conn),
-                self._fetch_patterns(patient_id, now, conn),
-                self._fetch_alerts(patient_id, conn),
-            )
+            brief_row = await self._fetch_brief(patient_id, now, conn)
+            risk_row = await self._fetch_risk(patient_id, conn)
+            patterns_rows = await self._fetch_patterns(patient_id, now, conn)
+            alerts_rows = await self._fetch_alerts(patient_id, conn)
 
         brief = self._brief_row_to_brief(brief_row) if brief_row else None
         risk = self._risk_row_to_risk(risk_row) if risk_row else None
