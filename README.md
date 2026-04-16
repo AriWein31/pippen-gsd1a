@@ -196,7 +196,8 @@ npm run build
 | [Project Memory](./docs/MEMORY.md) | Technical decisions, setup, commit history |
 | [Team Status](./docs/TEAM_STATUS.md) | Sprint status and agent assignments |
 | [Project Plan](./docs/PROJECT_PLAN.md) | Full 16-week roadmap |
-| [Sprint Docs](./docs/sprints/) | Per-sprint specifications |
+| [Sprint 07](./docs/sprints/sprint-07-alert-notifications.md) | Smart Notifications — AlertRouter, Telegram sender |
+| [Sprint 08](./docs/sprints/sprint-08-now-screen-intelligence.md) | Now Screen Intelligence — Recommendations, /now endpoint |
 
 ---
 
