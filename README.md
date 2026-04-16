@@ -1,10 +1,11 @@
 # Pippen — GSD1A Intelligence Operating System
 
-**Mobile-first intelligence for Glycogen Storage Disease Type 1a.**
+**AI-powered intelligence layer for Glycogen Storage Disease Type 1a management.**
 
-[![Week 7 Complete](https://img.shields.io/badge/Week%207-Backend%20Complete-success)](./docs/sprints/sprint-07-alert-notifications.md)
-[![Tests](https://img.shields.io/badge/tests-2%20passing-brightgreen)](./tests/)
-[![Safety Audit](https://img.shields.io/badge/Safety%20Audit-Passed-blue)](./docs/audits/)
+[![Phase 2 Complete](https://img.shields.io/badge/Phase-2%20Complete-brightgreen)](#)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+[![React 18](https://img.shields.io/badge/React-18-blue.svg)](https://react.dev)
+[![License: Proprietary](https://img.shields.io/badge/License-Proprietary-red.svg)](./LICENSE)
 
 ---
 
@@ -12,298 +13,211 @@
 
 Pippen is a **safety-critical intelligence operating system** for patients and caregivers managing **Glycogen Storage Disease Type 1a (GSD1A)** — a rare genetic metabolic disorder requiring precise cornstarch timing to maintain blood glucose.
 
-### Why Pippen Matters
+### The Problem
 
 GSD1A patients face a daily balancing act:
-- **Cornstarch every 5.15 hours** (even overnight)
+- Cornstarch every **5.15 hours** (even overnight)
 - **Hypoglycemia risk** if coverage lapses
-- **Emergency escalation** needed if patient becomes unresponsive
-- **Pattern complexity** that changes over time
+- No visibility into patterns until a crisis happens
+- caregivers receive late or unclear alerts
 
-Pippen transforms this from burden to intelligence: calm, predictive, and medically grounded.
+### The Solution
 
----
-
-## Current Status: Weeks 1-7 Complete ✅
-
-| Phase | Weeks | Status | Deliverable |
-|-------|-------|--------|-------------|
-| **Phase 1: Foundation** | 1-4 | ✅ **COMPLETE** | Mobile app + night alarms |
-| **Phase 2: Intelligence** | 5-7 | ✅ **BACKEND DONE** | Baselines, patterns, risk, briefs, AlertRouter, Telegram notifications |
-| Phase 2 continuation | 8 | 🟡 Next | Demo-ready full intelligence + end-to-end test |
-| Phase 3: Research & Chat | 9-12 | ⚪ Not Started | Research monitoring + Ask Pippen |
-| Phase 4: Production | 13-16 | ⚪ Not Started | Security + launch readiness |
-
-### Week-by-Week Progress
-
-| Week | Status | Deliverable | Owner |
-|------|--------|-------------|-------|
-| Week 1 | ✅ Complete | Database schema, event store, patient APIs | Pituach |
-| Week 2 | ✅ Complete | Coverage course engine (5.15h/2h timing) | Pituach |
-| Week 3 | ✅ Complete | Mobile shell (PWA, offline-first, 5 tabs) | Candidate 3 |
-| Week 4 | ✅ Complete | **Night alarm system** (safety-critical) | Pituach + Ezra |
-| Week 5 | ✅ Complete | Baselines, patterns, daily briefs, risk scoring, intelligence APIs | Candidate 1 + Ezra audit |
-| Week 6 | ✅ Complete | Now screen intelligence integration, config/degraded states, mobile polish | Candidate 3 + Ezra audit |
-| Week 7 | ✅ Backend Done | AlertRouter, NotificationDispatcher, AsyncTelegramNotificationService, quiet hours | Candidate 1 |
+Pippen learns each patient's patterns, detects anomalies early, generates actionable daily briefs, and delivers intelligent alerts to caregivers — before a crisis occurs.
 
 ---
 
-## Core Capabilities
+## Status
 
-### 1. Coverage Tracking 🕐
-Course-based timing that understands GSD1A:
-- **5.15-hour cornstarch coverage** (309 minutes)
-- **2-hour meal coverage** (120 minutes)
-- **Automatic chain linking** between consecutive doses
-- **Gap/overlap detection** for clinical review
+**Phase 2 (Intelligence) is complete.** The system learns patient patterns and delivers proactive notifications.
 
-```python
-# Example: Coverage course state machine
-active → warning_sent → expired → alarmed → escalated → resolved
-```
+| Phase | Status | Description |
+|-------|--------|-------------|
+| Phase 1: Foundation | ✅ Complete | Data entry, coverage tracking, night alarms |
+| Phase 2: Intelligence | ✅ Complete | Pattern detection, risk scoring, daily briefs, alerts |
+| Phase 3: Research & Chat | ⚪ Not Started | Research engine, Ask Pippen chat |
+| Phase 4: Production | ⚪ Not Started | Security hardening, compliance, launch |
 
-### 2. Night Safety 🚨
-Deterministic alarm system for overnight coverage:
-- **60-second tick** daemon monitoring all patients
-- **Multi-stage escalation**: warning → expired → alarm → escalation
-- **Multi-channel notifications**: Telegram + Push
-- **Automatic resolution** when patient logs qualifying event
+---
 
-**Timing Rules (Deterministic):**
-- Warning: 15 min before course end
-- Expired: At expected end time
-- Alarm: Immediately after expiry
-- Escalation: 5 min after alarm
+## Features
 
-### 3. Mobile App 📱
-Offline-first PWA for patients:
-- **5 tabs**: Now, Trends, Watch, Actions, Profile
-- **4 entry forms**: Glucose, cornstarch, meal, symptom
-- **Active course countdown** with visual progress
-- **Background sync** when connectivity restored
-- **Works offline** — no blocking network calls
+### Coverage Tracking
+- Course-based timing (5.15h cornstarch / 2h meals)
+- Automatic chain linking between doses
+- Gap/overlap detection
 
-**Tech Stack:**
-- React 18 + TypeScript (strict)
-- Vite + Workbox (PWA)
-- Dexie.js (IndexedDB)
-- Tailwind CSS
+### Night Safety Alarms
+- Deterministic state machine: `warning → expired → alarm → escalation`
+- Telegram notifications with escalation chain
+- 60-second monitoring tick
 
-### 4. Event-Sourced Architecture 📊
-Immutable medical history:
-- All state changes append events
-- Audit trail for clinical review
-- Event bus for reactive components
-- Course linking to trigger events
+### Intelligence Layer
+- **Baselines** — rolling 30-day overnight averages
+- **Pattern Detection** — late dosing, overnight lows, instability
+- **Risk Scoring** — weighted overnight risk with explainable factors
+- **Daily Briefs** — what changed, what matters, what to do tonight
+- **Recommendation Engine** — ranked, actionable guidance for the Now screen
+- **Change Detection** — week-over-week comparison of key metrics
 
-### 5. Intelligence Layer (Weeks 5-6) 🧠
-The patient intelligence layer now includes production code under `src/backend/intelligence/` and mobile consumption on the Now screen:
-- **Rolling 30-day baselines** for overnight metrics
-- **Deterministic pattern detection** for late bedtime dosing, overnight low clusters, and recent instability
-- **Weighted risk scoring** with explainable factors and confidence
-- **Daily brief generation** for what changed, what matters, and recommended attention
-- **Patient APIs** for baselines, patterns, risk, and daily brief
-- **Mobile Now screen intelligence panel** with loading, insufficient-data, partial-data, and not-configured states
-- **Focused unit coverage** for intelligence engines and API surfaces
+### Mobile App
+- Offline-first PWA (works without network)
+- 5 tabs: Now, Trends, Watch, Actions, Profile
+- 4 entry forms: glucose, cornstarch, meal, symptom
+- Real-time intelligence display
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         MOBILE (PWA)                        │
-│  ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌────────┐ │
-│  │   Now   │ │ Trends  │ │  Watch  │ │ Actions │ │Profile │ │
-│  └─────────┘ └─────────┘ └─────────┘ └─────────┘ └────────┘ │
-│  Offline-first • Dexie.js • Background sync                 │
-└────────────────────┬────────────────────────────────────────┘
-                     │ HTTPS/REST
-┌────────────────────▼────────────────────────────────────────┐
-│                       BACKEND (Python)                      │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │ Entries API  │  │Course Engine │  │  Alarm Engine    │  │
-│  │  (REST)      │  │(State Machine)│  │ (60s tick)      │  │
-│  └──────────────┘  └──────────────┘  └──────────────────┘  │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────┐  │
-│  │ Event Store  │  │   Linking    │  │   Notifiers      │  │
-│  │(Immutable)   │  │ (Chain/gap)  │  │(Telegram/Push)   │  │
-│  └──────────────┘  └──────────────┘  └──────────────────┘  │
-└────────────────────┬────────────────────────────────────────┘
-                     │ asyncpg
-┌────────────────────▼────────────────────────────────────────┐
-│                    POSTGRESQL                               │
-│  • events (append-only)                                     │
-│  • coverage_courses (state machine)                         │
-│  • night_alarm_state (escalation tracking)                  │
-│  • notification_log (audit trail)                           │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                         MOBILE (PWA)                         │
+│   Now  │  Trends  │  Watch  │  Actions  │  Profile         │
+│   Offline-first  ·  Dexie.js  ·  Background sync            │
+└──────────────────────────┬───────────────────────────────────┘
+                           │ HTTPS / REST
+┌──────────────────────────▼───────────────────────────────────┐
+│                    BACKEND (Python / FastAPI)                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────────┐  │
+│  │  Entries API │  │ Course Engine│  │   Alarm Engine     │  │
+│  │   (REST)     │  │(State Machine)│  │   (60s tick)      │  │
+│  └──────────────┘  └──────────────┘  └────────────────────┘  │
+│  ┌──────────────────────────────────────────────────────┐   │
+│  │  Intelligence: Baseline · Pattern · Risk · Brief · Alert│   │
+│  └──────────────────────────────────────────────────────┘   │
+│  ┌──────────────┐  ┌──────────────┐  ┌────────────────┐     │
+│  │  Event Store │  │   Notifiers  │  │  /now endpoint │     │
+│  │  (Immutable) │  │ Telegram/FCM │  │  (unified API) │     │
+│  └──────────────┘  └──────────────┘  └────────────────┘     │
+└──────────────────────────┬───────────────────────────────────┘
+                           │ asyncpg
+┌──────────────────────────▼───────────────────────────────────┐
+│                      POSTGRESQL                               │
+│  events · coverage_courses · patients · caregivers ·          │
+│  recommendations · patient_baselines · patient_patterns ·      │
+│  daily_briefs · night_alarm_state · notification_log         │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Quick Start
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Python 3.11+, FastAPI, asyncpg, Pydantic |
+| Database | PostgreSQL 16 |
+| Mobile | React 18, TypeScript, Vite, Tailwind CSS, Dexie.js |
+| Notifications | Telegram Bot API |
+| Intelligence | Deterministic rule-based engines (no ML in alarm paths) |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 18+
+- PostgreSQL 16
+- Telegram Bot token (from [@BotFather](https://t.me/BotFather))
 
 ### Backend
 
 ```bash
+# Clone
+git clone https://github.com/AriWein31/pippen-gsd1a.git
+cd pippen-gsd1a
+
 # Install dependencies
 pip install -r requirements.txt
 
-# Run tests
-python -m pytest tests/unit/test_alarm_engine.py -v
+# Configure environment
+cp .env.example .env
+# Edit .env with your DATABASE_URL and TELEGRAM_BOT_TOKEN
+
+# Start PostgreSQL
+brew services start postgresql@16
+
+# Run migrations
+psql -U postgres -d pippen -f src/backend/db/migrations/001_initial_schema.sql
+psql -U postgres -d pippen -f src/backend/db/migrations/002_add_coverage_courses_updated_at.sql
+psql -U postgres -d pippen -f src/backend/db/migrations/003_add_active_alerts.sql
 
 # Start development server
 cd src/backend
-python -m uvicorn main:app --reload
+python -m uvicorn main:app --reload --port 8000
 ```
 
 ### Mobile
 
 ```bash
 cd src/mobile
-
-# Install dependencies
 npm install
-
-# Development server
 npm run dev
+```
 
-# Production build
+### Run Tests
+
+```bash
+# Backend unit tests
+cd src/backend
+python -m pytest tests/unit/ -v
+
+# Mobile type check
+cd src/mobile
 npm run build
-
-# Preview production build
-npm run preview
 ```
 
 ---
 
-## API Endpoints
+## Key Endpoints
 
-### Patient Entries
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/patients/{id}/glucose` | POST | Log glucose reading |
-| `/patients/{id}/cornstarch` | POST | Log cornstarch (starts 5.15h course) |
-| `/patients/{id}/meals` | POST | Log meal (starts 2h course if no cornstarch) |
-| `/patients/{id}/symptoms` | POST | Log symptom |
-| `/patients/{id}/active-course` | GET | Get current coverage |
-
-### Safety-Critical
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| Alarm daemon | Internal | 60s tick, state machine transitions |
-| Notification service | Internal | Telegram + Push escalation |
-
----
-
-## Team
-
-| Role | Agent | Model | Status |
-|------|-------|-------|--------|
-| **Project Lead / Architect** | **Ezra** | **MiniMax 2.7** | 🟢 Active |
-| Backend Lead | Pituach | MiniMax 2.7 | ✅ Available |
-| Mobile Lead | Candidate 3 | MiniMax 2.7 | ✅ Week 3-6 complete |
-| **Intelligence Engineer** | **Candidate 1** | **MiniMax 2.7** | ✅ **Week 7 backend done** |
-| QA / Safety Auditor | Ezra | GPT-5.4 Codex | 🟢 Active |
+| `GET /patients/{id}/now` | GET | Unified Now screen — recommendations, changes, risk, brief, alerts |
+| `GET /patients/{id}/intelligence/baselines` | GET | Current baselines for all metrics |
+| `GET /patients/{id}/intelligence/patterns` | GET | Detected patterns with confidence |
+| `GET /patients/{id}/intelligence/risk` | GET | Current risk score and factors |
+| `GET /patients/{id}/brief` | GET | Today's daily brief |
+| `GET /patients/{id}/alerts` | GET | Active unacknowledged alerts |
+| `POST /patients/{id}/glucose` | POST | Log glucose reading |
+| `POST /patients/{id}/cornstarch` | POST | Log cornstarch dose |
+| `GET /health` | GET | Health check |
 
 ---
 
 ## Documentation
 
-### Planning & Architecture
-- [📋 Project Planning Sheet](./docs/PROJECT_PLAN.md) — Full timeline and milestones
-- [🏗️ Technical Architecture](./docs/architecture-v2.md) — System design by Opus
-- [🎨 Design System](./docs/design-system.md) — Mobile UI specifications
-
-### Audits (Safety-Critical)
-- [Week 1 Audit](./docs/audits/week1-audit-ezra.md)
-- [Week 2 Audit](./docs/audits/week2-audit-ezra.md)
-- [Week 3 Audit](./docs/audits/week3-comprehensive-audit-ezra.md)
-- [Week 4 Audit](./docs/audits/week4-deep-audit-ezra.md)
-
-### Sprints
-- [Sprint 1: Foundation](./docs/sprints/sprint-01-foundation.md)
-- [Sprint 3: Mobile Shell](./docs/sprints/sprint-03-mobile-shell.md)
-- [Sprint 4: Night Alarm](./docs/sprints/sprint-04-night-alarm.md)
-- [Sprint 5: Intelligence Layer](./docs/sprints/sprint-05-intelligence-layer.md)
-
-### Team
-- [👥 Team Status](./docs/TEAM_STATUS.md) — Daily reports and assignments
-- [📊 Milestones](./docs/MILESTONES.md) — Deliverables tracking
+| Document | Description |
+|----------|-------------|
+| [CHANGELOG](./CHANGELOG.md) | Version history and release notes |
+| [Project Memory](./docs/MEMORY.md) | Technical decisions, setup, commit history |
+| [Team Status](./docs/TEAM_STATUS.md) | Sprint status and agent assignments |
+| [Project Plan](./docs/PROJECT_PLAN.md) | Full 16-week roadmap |
+| [Sprint Docs](./docs/sprints/) | Per-sprint specifications |
 
 ---
 
-## Safety & Quality
+## Safety
 
-This system manages a **life-critical condition**. All safety-critical code:
+This system manages a life-critical condition. Safety is not optional.
 
-✅ **Deterministic logic** — No ML in alarm paths  
-✅ **100% test coverage** — Unit + integration tests  
-✅ **Safety audits** — GPT-5.4 Codex review before merge  
-✅ **Audit trails** — Immutable event history  
-✅ **Multi-channel redundancy** — Telegram + Push notifications  
-
-### Pre-Merge Checklist (Safety-Critical)
-- [ ] Unit tests pass
-- [ ] Integration tests pass
-- [ ] GPT-5.4 Codex safety audit
-- [ ] Deterministic logic verified
-- [ ] No blocking operations in alarm path
+- **No ML in alarm paths** — all alarm logic is deterministic and auditable
+- **Immutable event history** — full audit trail for clinical review
+- **Multi-channel alerts** — Telegram notifications with escalation chain
+- **Critical alert bypass** — quiet hours respected except for critical alerts
+- **Timezone-aware** — all times computed in patient's local timezone
 
 ---
 
-## Design Principles
+## Contributing
 
-1. **Offline-first** — App works without network
-2. **Deterministic safety** — Alarm logic is rule-based, predictable
-3. **Explainable intelligence** — Every signal has a "why"
-4. **Medical trust** — Premium, calm, clinically grounded UI
-5. **Immutable history** — Event-sourced for auditability
-
----
-
-## Repository Structure
-
-```
-pippen/
-├── README.md                    # This file
-├── docs/                        # Documentation
-│   ├── PROJECT_PLAN.md
-│   ├── audits/                  # Safety audits (Weeks 1-4)
-│   ├── sprints/                 # Sprint documentation
-│   ├── recruitment/             # Hiring specs and evaluations
-│   └── design-system.md
-├── src/
-│   ├── backend/                 # Python API + engines
-│   │   ├── alarms/              # Night alarm system
-│   │   ├── api/                 # REST endpoints
-│   │   ├── courses/             # Coverage course engine
-│   │   ├── db/                  # Migrations
-│   │   └── events/              # Event store + bus
-│   ├── mobile/                  # React PWA
-│   │   ├── src/
-│   │   │   ├── components/      # UI components
-│   │   │   ├── pages/           # 5 tab screens
-│   │   │   ├── db/              # Dexie/IndexedDB
-│   │   │   └── api/             # Sync logic
-│   │   └── dist/                # Production build
-│   └── intelligence/            # Week 5+ (pattern detection)
-├── tests/
-│   ├── unit/                    # Unit tests
-│   ├── e2e/                     # End-to-end tests
-│   └── integration/             # Integration tests
-└── scripts/                     # Automation
-```
+This is a private project. For questions, contact the project lead.
 
 ---
 
 ## License
 
 Proprietary — All rights reserved.
-
----
-
-**Questions?** Check the [Project Planning Sheet](./docs/PROJECT_PLAN.md) or ask Ezra.
-
-**Status:** Phase 2 backend complete. Week 8 next — demo-ready intelligence + end-to-end Telegram test.
